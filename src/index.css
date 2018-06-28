@@ -2,4 +2,31 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  font-size: 1em;
+  color: #343434;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: 1.6em;
+}
+
+/* common class */
+.Wrapper-fluid {
+  padding: 1em 5%;
+}
+.Wrapper {
+  width: 90%;
+  max-width: 1200px;
+  padding: 1em 0;
+  margin: 0 auto;
 }

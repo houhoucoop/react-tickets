@@ -1,0 +1,13 @@
+.App-table {
+  width: 90%;
+  max-width: 1200px;
+  margin: 3em auto;
+  border-collapse: collapse;
+}
+.App-table tr {
+  border-bottom: 1px solid #efefef;
+}
+.App-table th,
+.App-table td {
+  padding: 1em;
+}
