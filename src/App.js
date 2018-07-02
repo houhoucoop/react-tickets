@@ -8,7 +8,7 @@ import TableItems from './Components/TableItems';
 import AddForm from './Components/AddForm';
 
 class App extends Component {
-  
+
   constructor() {
     super();
     this.state = {
@@ -44,40 +44,40 @@ class App extends Component {
       }],
       tableItems: [{
         id: shortid.generate(),
-        category: 'Marketing',
         subject: 'A new rating has been received',
+        category: 'Marketing',
         assignee: 'Erwin',
         priority: 'Medium',
         status: 'Open',
         update: false
       }, {
         id: shortid.generate(),
-        category: 'Billing',
         subject: 'Billed twice',
+        category: 'Billing',
         assignee: 'Jessica',
         priority: 'High',
         status: 'Pending',
         update: false
       }, {
         id: shortid.generate(),
-        category: 'Service',
         subject: 'Verify email address',
+        category: 'Service',
         assignee: 'George',
         priority: 'Normal',
         status: 'Closed',
         update: false
       }, {
         id: shortid.generate(),
-        category: 'Service',
         subject: 'Security alert for account',
+        category: 'Service',
         assignee: 'Jose',
         priority: 'Low',
         status: 'Open',
         update: false
       }, {
         id: shortid.generate(),
-        category: 'Dev',
         subject: 'PHP 5.3 is not working',
+        category: 'Dev',
         assignee: 'Luke',
         priority: 'High',
         status: 'Processing',

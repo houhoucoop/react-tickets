@@ -4,16 +4,14 @@ import TableHeads from '../TableHeads';
 
 describe('TableItem', () => {
   let tableHeads,
-      wrapper,
-      tagThead,
-      tagTr;
+      wrapper;
   beforeEach(() => {
     tableHeads = [{
       name: 'ID'
     }, {
-      name: 'Category'
-    }, {
       name: 'Subject'
+    }, {
+      name: 'Category'
     }, {
       name: 'Assignee'
     }, {
@@ -22,13 +20,14 @@ describe('TableItem', () => {
       name: 'Status'
     }];
     wrapper = shallow(<TableHeads tableHeads={tableHeads} />);
-    tagThead = wrapper.find('thead');
-    tagTr = wrapper.find('tr');
+  });
+  it('should return props as', () => {
+    expect(wrapper.instance().props.tableHeads).toBe(tableHeads);
   });
   it('should render 1 <thead>', () => {
-    expect(tagThead.length).toBe(1);
+    expect(wrapper.find('thead').length).toBe(1);
   });
   it('should render 1 <tr>', () => {
-    expect(tagTr.length).toBe(1);
+    expect(wrapper.find('tr').length).toBe(1);
   });
 });

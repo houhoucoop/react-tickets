@@ -205,12 +205,12 @@ class TableItem extends Component {
           </td>
           <td>
             <button 
-              className="btn btn btn-info btn-sm mr-2" 
+              className="btn btn btn-info btn-sm mr-2 save-btn" 
               onClick={this.saveItem}>
               Save
             </button>
             <button 
-              className="btn btn-outline-dark btn-sm" 
+              className="btn btn-outline-dark btn-sm cancel-btn" 
               onClick={this.cancelEdit}>
               Cancel
             </button>
@@ -254,12 +254,12 @@ class TableItem extends Component {
           </td>
           <td>
             <button 
-              className="btn btn-dark btn-sm mr-2" 
+              className="btn btn-dark btn-sm mr-2 edit-btn" 
               onClick={this.editItem}>
               Edit
             </button>
             <button 
-              className="btn btn-outline-danger btn-sm" 
+              className="btn btn-outline-danger btn-sm delete-btn" 
               onClick={this.deleteItem}>
               Delete
             </button>
