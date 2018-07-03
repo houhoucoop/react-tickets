@@ -26,7 +26,8 @@ class AddForm extends Component {
           subject: this.refs.subject.value,
           assignee: this.refs.assignee.value,
           priority: this.refs.priority.value,
-          status: 'Open'
+          status: 'Open',
+          update: false
         }
       }, function () {
         this.props.addItem(this.state.addItem);
@@ -62,7 +63,7 @@ class AddForm extends Component {
           </fieldset>
           <fieldset>
             <label>Subject</label>
-            <input type="text" ref="subject"/>
+            <textarea rows="3" cols="20" ref="subject"></textarea>
           </fieldset>
           <fieldset>
             <label>Assignee</label>

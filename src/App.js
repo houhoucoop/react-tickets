@@ -39,21 +39,24 @@ class App extends Component {
         subject: 'A new rating has been received',
         assignee: 'Erwin',
         priority: 'Medium',
-        status: 'Open'
+        status: 'Open',
+        update: false
       }, {
         id: uuid.v4(),
         category: 'Billing',
         subject: 'Billed twice',
         assignee: 'Jessica',
         priority: 'High',
-        status: 'Pending'
+        status: 'Pending',
+        update: false
       }, {
         id: uuid.v4(),
         category: 'Service',
         subject: 'Verify email address',
         assignee: 'George',
         priority: 'Normal',
-        status: 'Closed'
+        status: 'Closed',
+        update: false
       }]
     });
   }
@@ -75,6 +78,16 @@ class App extends Component {
     });
   }
 
+  handleSaveItem(item) {
+    let id = item.id;
+    let tableItems = this.state.tableItems;
+    let index = tableItems.findIndex(x => x.id === id);
+    tableItems[index] = item;
+    this.setState({
+      tableItems: tableItems
+    });
+  }
+
   render() {
     return (
       <div className="App">
@@ -83,7 +96,11 @@ class App extends Component {
           <AddForm addItem={this.handleAddItem.bind(this)}/>
           <table className="App-table">
             <TableHeads tableHeads={this.state.tableHeads} />
-            <TableItems tableItems={this.state.tableItems} onDelete={this.handleDeleteItem.bind(this)} />
+            <TableItems 
+              tableItems={this.state.tableItems} 
+              onDelete={this.handleDeleteItem.bind(this)} 
+              onSave={this.handleSaveItem.bind(this)}
+            />
           </table>
         </div>
       </div>

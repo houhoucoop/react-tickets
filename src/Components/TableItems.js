@@ -15,12 +15,20 @@ class TableItems extends Component {
   deleteItem(id) {
     this.props.onDelete(id);
   }
+  handleSaveItem(item) {
+    this.props.onSave(item);
+  }
 
   render() {
     let tableItems;
     tableItems = this.props.tableItems.map((tableItem, index) => {
       return (
-        <TableItem key={index} tableItem={tableItem} onDelete={this.deleteItem.bind(this)} />
+        <TableItem 
+          key={index} 
+          tableItem={tableItem} 
+          onDelete={this.deleteItem.bind(this)}
+          saveItem={this.handleSaveItem.bind(this)}
+        />
       );
     });
 
