@@ -12,10 +12,10 @@ class TableItems extends Component {
     }
   }
 
-  deleteItem(id) {
+  deleteItem = (id) => {
     this.props.onDelete(id);
   }
-  handleSaveItem(item) {
+  handleSaveItem = (item) => {
     this.props.onSave(item);
   }
 
@@ -26,8 +26,8 @@ class TableItems extends Component {
         <TableItem 
           key={index} 
           tableItem={tableItem} 
-          onDelete={this.deleteItem.bind(this)}
-          saveItem={this.handleSaveItem.bind(this)}
+          onDelete={this.deleteItem}
+          saveItem={this.handleSaveItem}
         />
       );
     });

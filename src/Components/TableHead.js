@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 class TableHead extends Component {
   render() {
     return (
-      <th>{this.props.tableHead.name}</th>
+      <th className={this.props.tableHead.class}>
+        {this.props.tableHead.name}
+      </th>
     );
   }
 }

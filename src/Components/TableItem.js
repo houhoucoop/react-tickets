@@ -8,13 +8,9 @@ class TableItem extends Component {
       saveItem: {},
       isEditing: false
     }
-    
-    this.editItem = this.editItem.bind(this)
-    this.handleChange = this.handleChange.bind(this);
-    this.saveItem = this.saveItem.bind(this);
-    this.cancelEdit = this.cancelEdit.bind(this)
   }
 
+  // mount data before render
   componentWillMount() {
     this.setState({
       saveItem: this.props.tableItem
@@ -27,15 +23,17 @@ class TableItem extends Component {
     priorities: ['Normal', 'Low', 'Medium', 'High'],
     status: ['Open', 'Pending', 'Processing', 'Closed']
   }
-
-  editItem() {
-    this.setState({ 
+  
+  // Edit: set saveItem to new tableItem
+  editItem = () => {
+    this.setState({
       saveItem: this.props.tableItem,
-      isEditing: true 
+      isEditing: true
     })
   }
 
-  handleChange() {
+  // get new value when editing
+  handleChange = () => {
     this.setState({
       saveItem: {
         ...this.state.saveItem,
@@ -47,8 +45,9 @@ class TableItem extends Component {
       }
     });
   }
-  
-  saveItem(item) {
+
+  // Save: set update to true and props saveItem, then set is editing to false
+  saveItem = (item) => {
     if (this.refs.subject.value === '') {
       alert('Subject can\'t be empty');
     } else {
@@ -66,41 +65,85 @@ class TableItem extends Component {
     }
   }
 
-  cancelEdit() {
+  // Cancel: reset saveItem to original props data
+  cancelEdit = () => {
     this.setState({
       isEditing: false,
       saveItem: this.props.tableItem
     });
   }
 
-  deleteItem(id) {
+  // Delete: props tableItem.id
+  deleteItem = (id) => {
+    id = this.props.tableItem.id;
     this.props.onDelete(id);
   }
 
+  // styling: set different badge color
+  handlePriorityColor(priority) {
+    if (priority === 'Low') {
+      return 'badge badge-pill badge-success'
+    } else if (priority === 'Medium') {
+      return 'badge badge-pill badge-warning'
+    } else if (priority === "High") {
+      return 'badge badge-pill badge-danger'
+    } else {
+      return 'badge badge-pill badge-secondary'
+    }
+  }
+
+  // styling: set different badge color
+  handleStatusColor(status) {
+    if (status === 'Pending') {
+      return 'badge badge-pill badge-warning'
+    } else if (status === 'Processing') {
+      return 'badge badge-pill badge-success'
+    } else if (status === "Closed") {
+      return 'badge badge-pill badge-light'
+    } else {
+      return 'badge badge-pill badge-primary'
+    }
+  }
+
+  // if status is closed, set text to gray color
+  // if <tr> has been edited, add className 'update'
+  handleTrClass(update, status) {
+    if (status === "Closed") {
+      return 'closed'
+    }
+    if (update) {
+      return 'update'
+    }
+  }
+
   render() {
-    let categoryOptions = this.props.categories.map(category => {
+    const categoryOptions = this.props.categories.map(category => {
       return (
         <option key={category} value={category}>{category}</option>
       );
     });
-    let assigneeOptions = this.props.assignees.map(assignee => {
+    const assigneeOptions = this.props.assignees.map(assignee => {
       return (
         <option key={assignee} value={assignee}>{assignee}</option>
       );
     });
-    let priorityOptions = this.props.priorities.map(priority => {
+    const priorityOptions = this.props.priorities.map(priority => {
       return (
         <option key={priority} value={priority}>{priority}</option>
       );
     });
-    let statusOptions = this.props.status.map(status => {
+    const statusOptions = this.props.status.map(status => {
       return (
         <option key={status} value={status}>{status}</option>
       );
     });
+
+
     if (this.state.isEditing) {
       return (
-        <tr className={this.props.tableItem.update ? 'update' : ''}>
+        <tr className = {
+          this.handleTrClass(this.props.tableItem.update, this.props.tableItem.status)
+        }>
           <td>
             <span>
               {this.props.tableItem.id}
@@ -108,19 +151,8 @@ class TableItem extends Component {
           </td>
           <td>
             <span>
-              <select
-                ref="category"
-                value={this.state.saveItem.category}
-                onChange={this.handleChange} >
-                {categoryOptions}
-              </select>
-            </span>
-          </td>
-          <td>
-            <span>
               <textarea
-                rows="3"
-                cols="20"
+                className="form-control"
                 ref="subject"
                 value={this.state.saveItem.subject}
                 onChange={this.handleChange} >
@@ -130,6 +162,18 @@ class TableItem extends Component {
           <td>
             <span>
               <select
+                className="form-control"
+                ref="category"
+                value={this.state.saveItem.category}
+                onChange={this.handleChange} >
+                {categoryOptions}
+              </select>
+            </span>
+          </td>
+          <td>
+            <span>
+              <select
+                className="form-control"
                 ref="assignee"
                 value={this.state.saveItem.assignee}
                 onChange={this.handleChange} >
@@ -140,6 +184,7 @@ class TableItem extends Component {
           <td>
             <span>
               <select
+                className="form-control"
                 ref="priority"
                 value={this.state.saveItem.priority}
                 onChange={this.handleChange} >
@@ -150,6 +195,7 @@ class TableItem extends Component {
           <td>
             <span>
               <select
+                className="form-control"
                 ref="status"
                 value={this.state.saveItem.status}
                 onChange={this.handleChange} >
@@ -158,22 +204,27 @@ class TableItem extends Component {
             </span>
           </td>
           <td>
-            <button onClick={this.saveItem}>Save</button>
-            <button onClick={this.cancelEdit}>Cancel</button>
+            <button 
+              className="btn btn btn-info btn-sm mr-2" 
+              onClick={this.saveItem}>
+              Save
+            </button>
+            <button 
+              className="btn btn-outline-dark btn-sm" 
+              onClick={this.cancelEdit}>
+              Cancel
+            </button>
           </td>
         </tr>
       );
     } else {
       return (
-        <tr className={this.props.tableItem.update ? 'update' : ''}>
+        <tr className = {
+          this.handleTrClass(this.props.tableItem.update, this.props.tableItem.status)
+        }>
           <td>
             <span>
               {this.props.tableItem.id}
-            </span>
-          </td>
-          <td>
-            <span>
-              {this.props.tableItem.category}
             </span>
           </td>
           <td>
@@ -183,23 +234,35 @@ class TableItem extends Component {
           </td>
           <td>
             <span>
+              {this.props.tableItem.category}
+            </span>
+          </td>
+          <td>
+            <span>
               {this.props.tableItem.assignee}
             </span>
           </td>
           <td>
-            <span>
+            <span className={this.handlePriorityColor(this.props.tableItem.priority)}>
               {this.props.tableItem.priority}
             </span>
           </td>
           <td>
-            <span>
+            <span className={this.handleStatusColor(this.props.tableItem.status)}>
               {this.props.tableItem.status}
-              {this.props.tableItem.update}
             </span>
           </td>
           <td>
-            <button onClick={this.editItem}>Edit</button>
-            <button onClick={this.deleteItem.bind(this, this.props.tableItem.id)}>Delete</button>
+            <button 
+              className="btn btn-dark btn-sm mr-2" 
+              onClick={this.editItem}>
+              Edit
+            </button>
+            <button 
+              className="btn btn-outline-danger btn-sm" 
+              onClick={this.deleteItem}>
+              Delete
+            </button>
           </td>
         </tr>
       );

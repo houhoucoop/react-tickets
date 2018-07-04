@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import uuid from 'uuid';
-import './App.css';
+import shortid from 'shortid';
 
 // import Component
 import Header from './Components/Header';
@@ -18,23 +17,33 @@ class App extends Component {
     }
   }
 
+  // mount data before render
   componentWillMount() {
     this.setState({
       tableHeads: [{
-        name: 'ID'
+        name: 'ID',
+        class: 'w-12'
       }, {
-        name: 'Category'
+        name: 'Subject',
+        class: 'w-25'
       }, {
-        name: 'Subject'
+        name: 'Category',
+        class: 'w-12'
       }, {
-        name: 'Assignee'
+        name: 'Assignee',
+        class: 'w-10'
       }, {
-        name: 'Priority'
+        name: 'Priority',
+        class: 'w-10'
       }, {
-        name: 'Status'
+        name: 'Status',
+        class: 'w-12'
+      }, {
+        name: 'Action',
+        class: 'w-19'
       }],
       tableItems: [{
-        id: uuid.v4(),
+        id: shortid.generate(),
         category: 'Marketing',
         subject: 'A new rating has been received',
         assignee: 'Erwin',
@@ -42,7 +51,7 @@ class App extends Component {
         status: 'Open',
         update: false
       }, {
-        id: uuid.v4(),
+        id: shortid.generate(),
         category: 'Billing',
         subject: 'Billed twice',
         assignee: 'Jessica',
@@ -50,38 +59,57 @@ class App extends Component {
         status: 'Pending',
         update: false
       }, {
-        id: uuid.v4(),
+        id: shortid.generate(),
         category: 'Service',
         subject: 'Verify email address',
         assignee: 'George',
         priority: 'Normal',
         status: 'Closed',
         update: false
+      }, {
+        id: shortid.generate(),
+        category: 'Service',
+        subject: 'Security alert for account',
+        assignee: 'Jose',
+        priority: 'Low',
+        status: 'Open',
+        update: false
+      }, {
+        id: shortid.generate(),
+        category: 'Dev',
+        subject: 'PHP 5.3 is not working',
+        assignee: 'Luke',
+        priority: 'High',
+        status: 'Processing',
+        update: false
       }]
     });
   }
 
-  handleAddItem(item) {
-    let tableItems = this.state.tableItems;
+  // ADD: push item to tableItems
+  handleAddItem = (item) => {
+    const tableItems = this.state.tableItems;
     tableItems.push(item);
     this.setState({
       tableItems: tableItems
     });
   }
 
-  handleDeleteItem(id) {
-    let tableItems = this.state.tableItems;
-    let index = tableItems.findIndex(x => x.id === id);
+  // Delete: find index by id, then delete it
+  handleDeleteItem = (id) => {
+    const tableItems = this.state.tableItems;
+    const index = tableItems.findIndex(x => x.id === id);
     tableItems.splice(index, 1);
     this.setState({
       tableItems: tableItems
     });
   }
 
-  handleSaveItem(item) {
-    let id = item.id;
-    let tableItems = this.state.tableItems;
-    let index = tableItems.findIndex(x => x.id === id);
+  // Save: find item by id, then set it equal to new item 
+  handleSaveItem = (item) => {
+    const id = item.id;
+    const tableItems = this.state.tableItems;
+    const index = tableItems.findIndex(x => x.id === id);
     tableItems[index] = item;
     this.setState({
       tableItems: tableItems
@@ -92,14 +120,14 @@ class App extends Component {
     return (
       <div className="App">
         <Header/>
-        <div className="Wrapper">
-          <AddForm addItem={this.handleAddItem.bind(this)}/>
-          <table className="App-table">
+        <div className="container">
+          <AddForm addItem={this.handleAddItem}/>
+          <table className="table mt-5">
             <TableHeads tableHeads={this.state.tableHeads} />
             <TableItems 
               tableItems={this.state.tableItems} 
-              onDelete={this.handleDeleteItem.bind(this)} 
-              onSave={this.handleSaveItem.bind(this)}
+              onDelete={this.handleDeleteItem} 
+              onSave={this.handleSaveItem}
             />
           </table>
         </div>

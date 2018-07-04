@@ -1,11 +1,21 @@
 import React, { Component } from 'react';
-import './Header.css';
 
 class Header extends Component {
   render() {
     return (
-      <header className="App-header Wrapper-fluid ">
-        <h1>React-Ticket</h1>
+      <header>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+          <div className="container">
+            <span className="navbar-brand mb-0 h1">React Ticket</span>
+            <button 
+              type="button" 
+              className="btn btn-primary btn-sm" 
+              data-toggle="modal" 
+              data-target="#exampleModal">
+              Add Ticket
+            </button>
+          </div>
+        </nav>
       </header>
     );
   }
