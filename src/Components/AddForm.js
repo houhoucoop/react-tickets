@@ -1,114 +1,152 @@
 import React, { Component } from 'react';
+import './AddForm.css';
 import shortid from 'shortid';
 
 class AddForm extends Component {
+  //  the method doesn’t use this, so make it a static method
+  static showModal() {
+    const modal = document.getElementById('myModal');
+    modal.classList.add('show');
+  }
+
+  static optionGenerator(optionList) {
+    return optionList.map(option => {
+      return (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      );
+    });
+  }
+
   constructor() {
     super();
     this.state = {
-      addItem: {}
-    }
+      addItem: {},
+      categories: [],
+      assignees: [],
+      priorities: [],
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.formReset = this.formReset.bind(this);
   }
 
-  static defaultProps = {
-    categories: ['Billing', 'Dev', 'Marketing', 'Service'],
-    assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
-    priorities: ['Normal', 'Low', 'Medium', 'High']
+  componentWillMount() {
+    this.setState({
+      categories: ['Billing', 'Dev', 'Marketing', 'Service'],
+      assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
+      priorities: ['Normal', 'Low', 'Medium', 'High']
+    });
   }
 
   // if form submit, props addItem and reset the form
-  handleSubmit = (e) => {
-    if (this.refs.subject.value === '') {
+  handleSubmit(e) {
+    if (this.subject.value === '') {
       alert('Subject can\'t be empty' );
     } else {
       this.setState({
         addItem: {
           id: shortid.generate(),
-          category: this.refs.category.value,
-          subject: this.refs.subject.value,
-          assignee: this.refs.assignee.value,
-          priority: this.refs.priority.value,
+          category: this.category.value,
+          subject: this.subject.value,
+          assignee: this.assignee.value,
+          priority: this.priority.value,
           status: 'Open',
-          update: false
-        }
+          update: false,
+        },
       }, function () {
-        this.props.addItem(this.state.addItem);
-        document.getElementById('close-btn').click();
+        const { addItem } = this.state;
+        this.props.addItem(addItem);
         this.formReset();
       });
     }
     e.preventDefault();
   }
 
-  // form rest
-  formReset = () => {
-    this.refs.subject.value = '';
-    this.refs.category.value = 'Billing';
-    this.refs.assignee.value = 'Erwin';
-    this.refs.priority.value = 'Normal';
+  // close modal and rest the form
+  formReset() {
+    const modal = document.getElementById('myModal');
+    modal.classList.remove('show');
+    this.subject.value = '';
+    this.category.value = 'Billing';
+    this.assignee.value = 'Erwin';
+    this.priority.value = 'Normal';
   }
 
   render() {
-    const categoryOptions = this.props.categories.map(category => {
-      return (
-        <option key={category} value={category}>{category}</option>
-      );
-    });
-    const assigneeOptions = this.props.assignees.map(assignee => {
-      return (
-        <option key={assignee} value={assignee}>{assignee}</option>
-      );
-    });
-    const priorityOptions = this.props.priorities.map(priority => {
-      return (
-        <option key={priority} value={priority}>{priority}</option>
-      );
-    });
+    const { categories, assignees, priorities } = this.state;
+    const categoryOptions = AddForm.optionGenerator(categories);
+    const assigneeOptions = AddForm.optionGenerator(assignees);
+    const priorityOptions = AddForm.optionGenerator(priorities);
     return (
-      <div>
-        <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div className="modal-dialog" role="document">
+      <div className="mt-3">
+        <button
+          type="button"
+          className="btn btn-primary btn-sm"
+          onClick={AddForm.showModal}
+        >
+          Add Ticket
+        </button>
+        <div className="modal fade" id="myModal">
+          <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalLabel">Ticket Info</h5>
-                <button type="button" className="close" id="close-btn" data-dismiss="modal" aria-label="Close" onClick={this.formReset}>
-                  <span aria-hidden="true">&times;</span>
+                <h5 className="modal-title">
+                  Ticket Info
+                </h5>
+                <button type="button" className="close" id="close-btn" onClick={this.formReset}>
+                  <span aria-hidden="true">
+                    &times;
+                  </span>
                 </button>
               </div>
               <form onSubmit={this.handleSubmit}>
                 <div className="modal-body">
                   <div className="form-group">
-                    <label htmlFor="subject">Subject</label>
-                    <textarea 
-                      className="form-control" 
-                      id="subject" 
+                    <label htmlFor="subject">
+                      Subject
+                    </label>
+                    <textarea
+                      className="form-control"
+                      id="subject"
                       rows="3"
-                      ref="subject">
-                    </textarea>
+                      ref={(c) => { this.subject = c; }}
+                    />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="category">Category</label>
-                    <select 
-                      className="form-control" 
+                    <label htmlFor="category">
+                      Category
+                    </label>
+                    <select
+                      className="form-control"
                       id="category"
-                      ref="category">
+                      ref={(c) => { this.category = c; }}
+                    >
                       {categoryOptions}
                     </select>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="assignee">Assignee</label>
-                    <select 
-                      className="form-control" 
+                    <label htmlFor="assignee">
+                      Assignee
+                    </label>
+                    <select
+                      className="form-control"
                       id="assignee"
-                      ref="assignee">
+                      ref={(c) => { this.assignee = c; }}
+                    >
                       {assigneeOptions}
                     </select>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="priority">Priority</label>
+                    <label htmlFor="priority">
+                      Priority
+                    </label>
                     <select
-                      className="form-control" 
+                      className="form-control"
                       id="priority"
-                      ref="priority">
+                      ref={(c) => { this.priority = c; }}
+                    >
                       {priorityOptions}
                     </select>
                   </div>

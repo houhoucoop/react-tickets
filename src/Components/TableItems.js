@@ -4,28 +4,30 @@ import React, { Component } from 'react';
 import TableItem from './TableItem';
 
 class TableItems extends Component {
-
   constructor() {
     super();
-    this.state = {
-      tableItems: []
-    }
+
+    this.deleteItem = this.deleteItem.bind(this);
+    this.handleSaveItem = this.handleSaveItem.bind(this);
   }
 
-  deleteItem = (id) => {
-    this.props.onDelete(id);
+  deleteItem(id) {
+    const { onDelete } = this.props;
+    onDelete(id);
   }
-  handleSaveItem = (item) => {
-    this.props.onSave(item);
+
+  handleSaveItem(item) {
+    const { onSave } = this.props;
+    onSave(item);
   }
 
   render() {
-    let tableItems;
-    tableItems = this.props.tableItems.map((tableItem, index) => {
+    const { tableItems } = this.props;
+    const allTableItems = tableItems.map((tableItem, index) => {
       return (
-        <TableItem 
+        <TableItem
           key={index} 
-          tableItem={tableItem} 
+          tableItem={tableItem}
           onDelete={this.deleteItem}
           saveItem={this.handleSaveItem}
         />
@@ -34,7 +36,7 @@ class TableItems extends Component {
 
     return (
       <tbody>
-        {tableItems}
+        {allTableItems}
       </tbody>
     );
   }
