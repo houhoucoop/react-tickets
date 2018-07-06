@@ -3,13 +3,13 @@ import { shallow } from 'enzyme';
 import TableHead from '../TableHead';
 
 describe('TableItem', () => {
-  let tableHead,
-      wrapper;
+  let tableHead;
+  let wrapper;
   beforeEach(() => {
     tableHead = {
-      name: 'ID'
+      name: 'ID',
     };
-    wrapper = shallow(<TableHead key="1" tableHead={tableHead}/>);
+    wrapper = shallow(<TableHead key="1" tableHead={tableHead} />);
   });
   it('should return props as', () => {
     expect(wrapper.instance().props.tableHead).toBe(tableHead);

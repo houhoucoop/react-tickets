@@ -1,11 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import TableItem from '../TableItem';
 
 describe('TableItem', () => {
-  let tableItem, 
-      wrapper,
-      onDelete;
+  let tableItem;
+  let wrapper;
+  let onDelete;
   beforeEach(() => {
     tableItem = {
       id: 'rkQZyTFGX',
@@ -14,15 +14,15 @@ describe('TableItem', () => {
       assignee: 'Erwin',
       priority: 'Medium',
       status: 'Open',
-      update: false
+      update: false,
     };
     onDelete = jest.fn();
-    wrapper = shallow(
-      <TableItem 
-        key="1" 
-        tableItem={tableItem} 
+    wrapper = mount(
+      <TableItem
+        key="1"
+        tableItem={tableItem}
         onDelete={onDelete}
-      />
+      />,
     );
   });
   it('state isEditing', () => {

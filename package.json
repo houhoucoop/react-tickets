@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "bootstrap": "^4.1.1",
+    "classnames": "^2.2.6",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
-    "popper.js": "^1.14.3",
+    "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",

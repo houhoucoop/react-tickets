@@ -1,172 +1,169 @@
+import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import React, { Component } from 'react';
 
 class TableItem extends Component {
+  // if status is closed, set text to gray color
+  // if <tr> has been edited, add className 'update'
+  static handleTrClass(update, status) {
+    let trClassName;
+    if (update) {
+      trClassName = 'update';
+      if (status === 'Closed') {
+        trClassName = 'update closed';
+      }
+    }
+    return trClassName;
+  }
+
+  static optionGenerator(optionList) {
+    return optionList.map(opt => (
+      <option key={opt} value={opt}>
+        {opt}
+      </option>
+    ));
+  }
 
   constructor() {
     super();
     this.state = {
-      saveItem: {},
-      isEditing: false
-    }
+      savedItem: {},
+      isEditing: false,
+      categories: [],
+      assignees: [],
+      priorities: [],
+      status: [],
+    };
+
+    this.editItem = this.editItem.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.saveItem = this.saveItem.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   // mount data before render
   componentWillMount() {
+    const { tableItem } = this.props;
     this.setState({
-      saveItem: this.props.tableItem
+      savedItem: tableItem,
+      categories: ['Billing', 'Dev', 'Marketing', 'Service'],
+      assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
+      priorities: ['Normal', 'Low', 'Medium', 'High'],
+      status: ['Open', 'Pending', 'Processing', 'Closed'],
     });
   }
 
-  static defaultProps = {
-    categories: ['Billing', 'Dev', 'Marketing', 'Service'],
-    assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
-    priorities: ['Normal', 'Low', 'Medium', 'High'],
-    status: ['Open', 'Pending', 'Processing', 'Closed']
-  }
-  
-  // Edit: set saveItem to new tableItem
-  editItem = () => {
+  // Edit: set savedItem to new tableItem
+  editItem() {
+    const { tableItem } = this.props;
     this.setState({
-      saveItem: this.props.tableItem,
-      isEditing: true
-    })
+      savedItem: tableItem,
+      isEditing: true,
+    });
   }
 
   // get new value when editing
-  handleChange = () => {
+  handleChange() {
+    const { savedItem } = this.state;
     this.setState({
-      saveItem: {
-        ...this.state.saveItem,
-        category: this.refs.category.value,
-        subject: this.refs.subject.value,
-        assignee: this.refs.assignee.value,
-        priority: this.refs.priority.value,
-        status: this.refs.status.value
-      }
+      savedItem: {
+        ...savedItem,
+        category: this.category.value,
+        subject: this.subject.value,
+        assignee: this.assignee.value,
+        priority: this.priority.value,
+        status: this.status.value,
+      },
     });
   }
 
   // Save: set update to true and props saveItem, then set is editing to false
-  saveItem = (item) => {
-    if (this.refs.subject.value === '') {
+  saveItem() {
+    if (this.subject.value === '') {
       alert('Subject can\'t be empty');
     } else {
+      const { savedItem } = this.state;
       this.setState({
-        saveItem: {
-          ...this.state.saveItem,
-          update: true
-        }
-      }, function () {
-        this.props.saveItem(this.state.saveItem);
+        savedItem: {
+          ...savedItem,
+          update: true,
+        },
+      }, function sendProps() {
+        const { savedItem } = this.state;
+        const { saveItem } = this.props;
+        saveItem(savedItem);
         this.setState({
-          isEditing: false
-        })
+          isEditing: false,
+        });
       });
     }
   }
 
   // Cancel: reset saveItem to original props data
-  cancelEdit = () => {
+  cancelEdit() {
+    const { tableItem } = this.props;
     this.setState({
       isEditing: false,
-      saveItem: this.props.tableItem
+      savedItem: tableItem,
     });
   }
 
   // Delete: props tableItem.id
-  deleteItem = (id) => {
-    id = this.props.tableItem.id;
-    this.props.onDelete(id);
-  }
-
-  // styling: set different badge color
-  handlePriorityColor(priority) {
-    if (priority === 'Low') {
-      return 'badge badge-pill badge-success'
-    } else if (priority === 'Medium') {
-      return 'badge badge-pill badge-warning'
-    } else if (priority === "High") {
-      return 'badge badge-pill badge-danger'
-    } else {
-      return 'badge badge-pill badge-secondary'
-    }
-  }
-
-  // styling: set different badge color
-  handleStatusColor(status) {
-    if (status === 'Pending') {
-      return 'badge badge-pill badge-warning'
-    } else if (status === 'Processing') {
-      return 'badge badge-pill badge-success'
-    } else if (status === "Closed") {
-      return 'badge badge-pill badge-light'
-    } else {
-      return 'badge badge-pill badge-primary'
-    }
-  }
-
-  // if status is closed, set text to gray color
-  // if <tr> has been edited, add className 'update'
-  handleTrClass(update, status) {
-    if (status === "Closed") {
-      return 'closed'
-    }
-    if (update) {
-      return 'update'
-    }
+  deleteItem() {
+    const { tableItem, onDelete } = this.props;
+    const theId = tableItem.id;
+    onDelete(theId);
   }
 
   render() {
-    const categoryOptions = this.props.categories.map(category => {
-      return (
-        <option key={category} value={category}>{category}</option>
-      );
-    });
-    const assigneeOptions = this.props.assignees.map(assignee => {
-      return (
-        <option key={assignee} value={assignee}>{assignee}</option>
-      );
-    });
-    const priorityOptions = this.props.priorities.map(priority => {
-      return (
-        <option key={priority} value={priority}>{priority}</option>
-      );
-    });
-    const statusOptions = this.props.status.map(status => {
-      return (
-        <option key={status} value={status}>{status}</option>
-      );
+    const {
+      isEditing, savedItem, categories, assignees, priorities, status,
+    } = this.state;
+    // set badge color
+    const priorityClass = classNames('badge badge-pill', {
+      'badge-secondary': (savedItem.priority === 'Normal'),
+      'badge-success': (savedItem.priority === 'Low'),
+      'badge-warning': (savedItem.priority === 'Medium'),
+      'badge-danger': (savedItem.priority === 'High'),
     });
 
+    const statusClass = classNames('badge badge-pill', {
+      'badge-primary': (savedItem.status === 'Open'),
+      'badge-warning': (savedItem.status === 'Pending'),
+      'badge-success': (savedItem.status === 'Processing'),
+      'badge-light': (savedItem.status === 'Closed'),
+    });
 
-    if (this.state.isEditing) {
+    if (isEditing) {
       return (
-        <tr className = {
-          this.handleTrClass(this.props.tableItem.update, this.props.tableItem.status)
-        }>
+        <tr className={
+          TableItem.handleTrClass(savedItem.update, savedItem.status)}
+        >
           <td>
             <span>
-              {this.props.tableItem.id}
+              {savedItem.id}
             </span>
           </td>
           <td>
             <span>
               <textarea
                 className="form-control"
-                ref="subject"
-                value={this.state.saveItem.subject}
-                onChange={this.handleChange} >
-              </textarea>
+                ref={(c) => { this.subject = c; }}
+                value={savedItem.subject}
+                onChange={this.handleChange}
+              />
             </span>
           </td>
           <td>
             <span>
               <select
                 className="form-control"
-                ref="category"
-                value={this.state.saveItem.category}
-                onChange={this.handleChange} >
-                {categoryOptions}
+                ref={(c) => { this.category = c; }}
+                value={savedItem.category}
+                onChange={this.handleChange}
+              >
+                {TableItem.optionGenerator(categories)}
               </select>
             </span>
           </td>
@@ -174,10 +171,11 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref="assignee"
-                value={this.state.saveItem.assignee}
-                onChange={this.handleChange} >
-                {assigneeOptions}
+                ref={(c) => { this.assignee = c; }}
+                value={savedItem.assignee}
+                onChange={this.handleChange}
+              >
+                {TableItem.optionGenerator(assignees)}
               </select>
             </span>
           </td>
@@ -185,10 +183,11 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref="priority"
-                value={this.state.saveItem.priority}
-                onChange={this.handleChange} >
-                {priorityOptions}
+                ref={(c) => { this.priority = c; }}
+                value={savedItem.priority}
+                onChange={this.handleChange}
+              >
+                {TableItem.optionGenerator(priorities)}
               </select>
             </span>
           </td>
@@ -196,78 +195,137 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref="status"
-                value={this.state.saveItem.status}
-                onChange={this.handleChange} >
-                {statusOptions}
+                ref={(c) => { this.status = c; }}
+                value={savedItem.status}
+                onChange={this.handleChange}
+              >
+                {TableItem.optionGenerator(status)}
               </select>
             </span>
           </td>
           <td>
-            <button 
-              className="btn btn btn-info btn-sm mr-2 save-btn" 
-              onClick={this.saveItem}>
+            <button
+              type="button"
+              className="btn btn btn-info btn-sm mr-2 save-btn"
+              onClick={this.saveItem}
+            >
               Save
             </button>
-            <button 
-              className="btn btn-outline-dark btn-sm cancel-btn" 
-              onClick={this.cancelEdit}>
+            <button
+              type="button"
+              className="btn btn-outline-dark btn-sm cancel-btn"
+              onClick={this.cancelEdit}
+            >
               Cancel
             </button>
           </td>
         </tr>
       );
-    } else {
-      return (
-        <tr className = {
-          this.handleTrClass(this.props.tableItem.update, this.props.tableItem.status)
-        }>
-          <td>
-            <span>
-              {this.props.tableItem.id}
-            </span>
-          </td>
-          <td>
-            <span>
-              {this.props.tableItem.subject}
-            </span>
-          </td>
-          <td>
-            <span>
-              {this.props.tableItem.category}
-            </span>
-          </td>
-          <td>
-            <span>
-              {this.props.tableItem.assignee}
-            </span>
-          </td>
-          <td>
-            <span className={this.handlePriorityColor(this.props.tableItem.priority)}>
-              {this.props.tableItem.priority}
-            </span>
-          </td>
-          <td>
-            <span className={this.handleStatusColor(this.props.tableItem.status)}>
-              {this.props.tableItem.status}
-            </span>
-          </td>
-          <td>
-            <button 
-              className="btn btn-dark btn-sm mr-2 edit-btn" 
-              onClick={this.editItem}>
-              Edit
-            </button>
-            <button 
-              className="btn btn-outline-danger btn-sm delete-btn" 
-              onClick={this.deleteItem}>
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
     }
+    return (
+      <NormalContent
+        savedItem={savedItem}
+        priorityClass={priorityClass}
+        statusClass={statusClass}
+        editItem={this.editItem}
+        deleteItem={this.deleteItem}
+      />
+    );
   }
 }
+
+function NormalContent(props) {
+  const {
+    savedItem, priorityClass, statusClass, editItem, deleteItem,
+  } = props;
+  return (
+    <tr className={TableItem.handleTrClass(savedItem.update, savedItem.status)}>
+      <td>
+        <span>
+          {savedItem.id}
+        </span>
+      </td>
+      <td>
+        <span>
+          {savedItem.subject}
+        </span>
+      </td>
+      <td>
+        <span>
+          {savedItem.category}
+        </span>
+      </td>
+      <td>
+        <span>
+          {savedItem.assignee}
+        </span>
+      </td>
+      <td>
+        <span className={priorityClass}>
+          {savedItem.priority}
+        </span>
+      </td>
+      <td>
+        <span className={statusClass}>
+          {savedItem.status}
+        </span>
+      </td>
+      <td>
+        <button
+          type="button"
+          className="btn btn-dark btn-sm mr-2 edit-btn"
+          onClick={editItem}
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          className="btn btn-outline-danger btn-sm delete-btn"
+          onClick={deleteItem}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+TableItem.propTypes = {
+  tableItem: PropTypes.shape({
+    id: PropTypes.string,
+    subject: PropTypes.string,
+    category: PropTypes.string,
+    assignee: PropTypes.string,
+    priority: PropTypes.string,
+    status: PropTypes.string,
+    update: PropTypes.bool,
+  }),
+  onDelete: PropTypes.func,
+  saveItem: PropTypes.func,
+};
+
+TableItem.defaultProps = {
+  tableItem: {
+    id: 'Hyq2-P3GQ',
+    subject: 'A new rating has been received',
+    category: 'Marketing',
+    assignee: 'Erwin',
+    priority: 'Medium',
+    status: 'Open',
+    update: false,
+  },
+  onDelete: (id) => {
+    const { tableItems } = this.state;
+    const index = tableItems.findIndex(x => x.id === id);
+    tableItems.splice(index, 1);
+    this.setState({
+      tableItems,
+    });
+  },
+  saveItem: (item) => {
+    const { onSave } = this.props;
+    onSave(item);
+  },
+};
 
 export default TableItem;

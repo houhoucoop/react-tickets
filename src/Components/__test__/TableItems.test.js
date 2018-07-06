@@ -3,8 +3,8 @@ import { shallow } from 'enzyme';
 import TableItems from '../TableItems';
 
 describe('TableItem', () => {
-  let tableItems, 
-      wrapper;
+  let tableItems;
+  let wrapper;
   beforeEach(() => {
     tableItems = [{
       id: 'rkQZyTFGX',
@@ -13,9 +13,9 @@ describe('TableItem', () => {
       assignee: 'Erwin',
       priority: 'Medium',
       status: 'Open',
-      update: false
+      update: false,
     }];
-    wrapper = shallow(<TableItems tableItems={tableItems}/>);
+    wrapper = shallow(<TableItems tableItems={tableItems} />);
   });
   it('should return props as', () => {
     expect(wrapper.instance().props.tableItems).toBe(tableItems);

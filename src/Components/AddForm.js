@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import './AddForm.css';
 import shortid from 'shortid';
@@ -10,19 +11,17 @@ class AddForm extends Component {
   }
 
   static optionGenerator(optionList) {
-    return optionList.map(option => {
-      return (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      );
-    });
+    return optionList.map(opt => (
+      <option key={opt} value={opt}>
+        {opt}
+      </option>
+    ));
   }
 
   constructor() {
     super();
     this.state = {
-      addItem: {},
+      addedItem: {},
       categories: [],
       assignees: [],
       priorities: [],
@@ -36,28 +35,29 @@ class AddForm extends Component {
     this.setState({
       categories: ['Billing', 'Dev', 'Marketing', 'Service'],
       assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
-      priorities: ['Normal', 'Low', 'Medium', 'High']
+      priorities: ['Normal', 'Low', 'Medium', 'High'],
     });
   }
 
   // if form submit, props addItem and reset the form
   handleSubmit(e) {
     if (this.subject.value === '') {
-      alert('Subject can\'t be empty' );
+      alert('Subject can\'t be empty');
     } else {
       this.setState({
-        addItem: {
+        addedItem: {
           id: shortid.generate(),
-          category: this.category.value,
           subject: this.subject.value,
+          category: this.category.value,
           assignee: this.assignee.value,
           priority: this.priority.value,
           status: 'Open',
           update: false,
         },
-      }, function () {
-        const { addItem } = this.state;
-        this.props.addItem(addItem);
+      }, function sendProps() {
+        const { addedItem } = this.state;
+        const { addItem } = this.props;
+        addItem(addedItem);
         this.formReset();
       });
     }
@@ -76,9 +76,6 @@ class AddForm extends Component {
 
   render() {
     const { categories, assignees, priorities } = this.state;
-    const categoryOptions = AddForm.optionGenerator(categories);
-    const assigneeOptions = AddForm.optionGenerator(assignees);
-    const priorityOptions = AddForm.optionGenerator(priorities);
     return (
       <div className="mt-3">
         <button
@@ -123,7 +120,7 @@ class AddForm extends Component {
                       id="category"
                       ref={(c) => { this.category = c; }}
                     >
-                      {categoryOptions}
+                      {AddForm.optionGenerator(categories)}
                     </select>
                   </div>
                   <div className="form-group">
@@ -135,7 +132,7 @@ class AddForm extends Component {
                       id="assignee"
                       ref={(c) => { this.assignee = c; }}
                     >
-                      {assigneeOptions}
+                      {AddForm.optionGenerator(assignees)}
                     </select>
                   </div>
                   <div className="form-group">
@@ -147,12 +144,12 @@ class AddForm extends Component {
                       id="priority"
                       ref={(c) => { this.priority = c; }}
                     >
-                      {priorityOptions}
+                      {AddForm.optionGenerator(priorities)}
                     </select>
                   </div>
                 </div>
                 <div className="modal-footer">
-                  <input type="submit" className="btn btn-info" value="Save"/>
+                  <input type="submit" className="btn btn-info" value="Save" />
                 </div>
               </form>
             </div>
@@ -164,4 +161,16 @@ class AddForm extends Component {
   }
 }
 
+AddForm.propTypes = {
+  addItem: PropTypes.func,
+};
+AddForm.defaultProps = {
+  addItem: (item) => {
+    const { tableItems } = this.state;
+    tableItems.push(item);
+    this.setState({
+      tableItems,
+    });
+  },
+};
 export default AddForm;

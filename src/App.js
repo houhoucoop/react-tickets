@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import shortid from 'shortid';
+import { heads, items } from './fakeData';
 
 // import Component
 import Header from './Components/Header';
@@ -23,69 +23,8 @@ class App extends Component {
   // mount data before render
   componentWillMount() {
     this.setState({
-      tableHeads: [{
-        name: 'ID',
-        class: 'w-12',
-      }, {
-        name: 'Subject',
-        class: 'w-25',
-      }, {
-        name: 'Category',
-        class: 'w-12',
-      }, {
-        name: 'Assignee',
-        class: 'w-10',
-      }, {
-        name: 'Priority',
-        class: 'w-10',
-      }, {
-        name: 'Status',
-        class: 'w-12',
-      }, {
-        name: 'Action',
-        class: 'w-19',
-      }],
-      tableItems: [{
-        id: shortid.generate(),
-        subject: 'A new rating has been received',
-        category: 'Marketing',
-        assignee: 'Erwin',
-        priority: 'Medium',
-        status: 'Open',
-        update: false,
-      }, {
-        id: shortid.generate(),
-        subject: 'Billed twice',
-        category: 'Billing',
-        assignee: 'Jessica',
-        priority: 'High',
-        status: 'Pending',
-        update: false,
-      }, {
-        id: shortid.generate(),
-        subject: 'Verify email address',
-        category: 'Service',
-        assignee: 'George',
-        priority: 'Normal',
-        status: 'Closed',
-        update: false,
-      }, {
-        id: shortid.generate(),
-        subject: 'Security alert for account',
-        category: 'Service',
-        assignee: 'Jose',
-        priority: 'Low',
-        status: 'Open',
-        update: false,
-      }, {
-        id: shortid.generate(),
-        subject: 'PHP 5.3 is not working',
-        category: 'Dev',
-        assignee: 'Luke',
-        priority: 'High',
-        status: 'Processing',
-        update: false,
-      }],
+      tableHeads: heads,
+      tableItems: items,
     });
   }
 
@@ -110,9 +49,9 @@ class App extends Component {
 
   // Save: find item by id, then set it equal to new item
   handleSaveItem(item) {
-    const id = item.id;
+    const theId = item.id;
     const { tableItems } = this.state;
-    const index = tableItems.findIndex(x => x.id === id);
+    const index = tableItems.findIndex(x => x.id === theId);
     tableItems[index] = item;
     this.setState({
       tableItems,

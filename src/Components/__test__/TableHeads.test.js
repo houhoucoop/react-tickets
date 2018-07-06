@@ -3,21 +3,21 @@ import { shallow } from 'enzyme';
 import TableHeads from '../TableHeads';
 
 describe('TableItem', () => {
-  let tableHeads,
-      wrapper;
+  let tableHeads;
+  let wrapper;
   beforeEach(() => {
     tableHeads = [{
-      name: 'ID'
+      name: 'ID',
     }, {
-      name: 'Subject'
+      name: 'Subject',
     }, {
-      name: 'Category'
+      name: 'Category',
     }, {
-      name: 'Assignee'
+      name: 'Assignee',
     }, {
-      name: 'Priority'
+      name: 'Priority',
     }, {
-      name: 'Status'
+      name: 'Status',
     }];
     wrapper = shallow(<TableHeads tableHeads={tableHeads} />);
   });

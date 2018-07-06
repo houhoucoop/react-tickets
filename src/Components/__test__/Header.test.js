@@ -17,8 +17,4 @@ describe('Header', () => {
     expect(wrapper.find('span').length).toBe(1);
     expect(wrapper.find('span').at(0).text()).toBe('React Ticket');
   });
-  it('should render 1 <button>', () => {
-    expect(wrapper.find('button').length).toBe(1);
-    expect(wrapper.find('button').at(0).text()).toBe('Add Ticket');
-  });
 });
