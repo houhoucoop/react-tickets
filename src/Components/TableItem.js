@@ -1,6 +1,12 @@
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import React, { Component } from 'react';
+
+// action
+import { deleteItem, saveItem } from '../actions';
+
 
 class TableItem extends Component {
   // if status is closed, set text to gray color
@@ -37,9 +43,9 @@ class TableItem extends Component {
 
     this.editItem = this.editItem.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.saveItem = this.saveItem.bind(this);
+    this.handleSaveItem = this.handleSaveItem.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
+    this.handleDeleteItem = this.handleDeleteItem.bind(this);
   }
 
   // mount data before render
@@ -79,23 +85,19 @@ class TableItem extends Component {
   }
 
   // Save: set update to true and props saveItem, then set is editing to false
-  saveItem() {
+  handleSaveItem() {
     if (this.subject.value === '') {
       alert('Subject can\'t be empty');
     } else {
+      const { saveItem } = this.props;
       const { savedItem } = this.state;
+      const item = {
+        ...savedItem,
+        update: true,
+      };
+      saveItem(item);
       this.setState({
-        savedItem: {
-          ...savedItem,
-          update: true,
-        },
-      }, function sendProps() {
-        const { savedItem } = this.state;
-        const { saveItem } = this.props;
-        saveItem(savedItem);
-        this.setState({
-          isEditing: false,
-        });
+        isEditing: false,
       });
     }
   }
@@ -110,16 +112,17 @@ class TableItem extends Component {
   }
 
   // Delete: props tableItem.id
-  deleteItem() {
-    const { tableItem, onDelete } = this.props;
+  handleDeleteItem() {
+    const { tableItem, deleteItem } = this.props;
     const theId = tableItem.id;
-    onDelete(theId);
+    deleteItem(theId);
   }
 
   render() {
     const {
       isEditing, savedItem, categories, assignees, priorities, status,
     } = this.state;
+
     // set badge color
     const priorityClass = classNames('badge badge-pill', {
       'badge-secondary': (savedItem.priority === 'Normal'),
@@ -207,7 +210,7 @@ class TableItem extends Component {
             <button
               type="button"
               className="btn btn btn-info btn-sm mr-2 save-btn"
-              onClick={this.saveItem}
+              onClick={this.handleSaveItem}
             >
               Save
             </button>
@@ -228,7 +231,7 @@ class TableItem extends Component {
         priorityClass={priorityClass}
         statusClass={statusClass}
         editItem={this.editItem}
-        deleteItem={this.deleteItem}
+        handleDeleteItem={this.handleDeleteItem}
       />
     );
   }
@@ -236,7 +239,7 @@ class TableItem extends Component {
 
 function NormalContent(props) {
   const {
-    savedItem, priorityClass, statusClass, editItem, deleteItem,
+    savedItem, priorityClass, statusClass, editItem, handleDeleteItem,
   } = props;
   return (
     <tr className={TableItem.handleTrClass(savedItem.update, savedItem.status)}>
@@ -281,7 +284,7 @@ function NormalContent(props) {
         <button
           type="button"
           className="btn btn-outline-danger btn-sm delete-btn"
-          onClick={deleteItem}
+          onClick={handleDeleteItem}
         >
           Delete
         </button>
@@ -290,6 +293,7 @@ function NormalContent(props) {
   );
 }
 
+// props validation
 TableItem.propTypes = {
   tableItem: PropTypes.shape({
     id: PropTypes.string,
@@ -300,8 +304,8 @@ TableItem.propTypes = {
     status: PropTypes.string,
     update: PropTypes.bool,
   }),
-  onDelete: PropTypes.func,
   saveItem: PropTypes.func,
+  deleteItem: PropTypes.func,
 };
 
 TableItem.defaultProps = {
@@ -314,18 +318,62 @@ TableItem.defaultProps = {
     status: 'Open',
     update: false,
   },
-  onDelete: (id) => {
-    const { tableItems } = this.state;
-    const index = tableItems.findIndex(x => x.id === id);
-    tableItems.splice(index, 1);
+  saveItem: item => ({
+    type: 'SAVE_ITEM',
+    item,
+  }),
+  deleteItem: id => ({
+    type: 'DELETE_ITEM',
+    id,
+  }),
+};
+
+
+NormalContent.propTypes = {
+  savedItem: PropTypes.shape({
+    id: PropTypes.string,
+    subject: PropTypes.string,
+    category: PropTypes.string,
+    assignee: PropTypes.string,
+    priority: PropTypes.string,
+    status: PropTypes.string,
+    update: PropTypes.bool,
+  }),
+  priorityClass: PropTypes.string,
+  statusClass: PropTypes.string,
+  editItem: PropTypes.func,
+  handleDeleteItem: PropTypes.func,
+};
+
+NormalContent.defaultProps = {
+  savedItem: {
+    id: 'Hyq2-P3GQ',
+    subject: 'A new rating has been received',
+    category: 'Marketing',
+    assignee: 'Erwin',
+    priority: 'Medium',
+    status: 'Open',
+    update: false,
+  },
+  priorityClass: 'badge badge-pill badge-secondary',
+  statusClass: 'badge badge-pill badge-primary',
+  editItem: () => {
+    const { tableItem } = this.props;
     this.setState({
-      tableItems,
+      savedItem: tableItem,
+      isEditing: true,
     });
   },
-  saveItem: (item) => {
-    const { onSave } = this.props;
-    onSave(item);
+  handleDeleteItem: () => {
+    const { tableItem, deleteItem } = this.props;
+    const theId = tableItem.id;
+    deleteItem(theId);
   },
 };
 
-export default TableItem;
+const mapDispatchToProps = dispatch => ({
+  deleteItem: bindActionCreators(deleteItem, dispatch),
+  saveItem: bindActionCreators(saveItem, dispatch),
+});
+
+export default connect(null, mapDispatchToProps)(TableItem);

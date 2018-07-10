@@ -1,7 +1,12 @@
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import './AddForm.css';
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import shortid from 'shortid';
+
+// action
+import { addItem } from '../actions';
 
 class AddForm extends Component {
   //  the method doesn’t use this, so make it a static method
@@ -21,7 +26,6 @@ class AddForm extends Component {
   constructor() {
     super();
     this.state = {
-      addedItem: {},
       categories: [],
       assignees: [],
       priorities: [],
@@ -44,22 +48,18 @@ class AddForm extends Component {
     if (this.subject.value === '') {
       alert('Subject can\'t be empty');
     } else {
-      this.setState({
-        addedItem: {
-          id: shortid.generate(),
-          subject: this.subject.value,
-          category: this.category.value,
-          assignee: this.assignee.value,
-          priority: this.priority.value,
-          status: 'Open',
-          update: false,
-        },
-      }, function sendProps() {
-        const { addedItem } = this.state;
-        const { addItem } = this.props;
-        addItem(addedItem);
-        this.formReset();
-      });
+      const { addItem } = this.props;
+      const item = {
+        id: shortid.generate(),
+        subject: this.subject.value,
+        category: this.category.value,
+        assignee: this.assignee.value,
+        priority: this.priority.value,
+        status: 'Open',
+        update: false,
+      };
+      addItem(item);
+      this.formReset();
     }
     e.preventDefault();
   }
@@ -108,7 +108,7 @@ class AddForm extends Component {
                       className="form-control"
                       id="subject"
                       rows="3"
-                      ref={(c) => { this.subject = c; }}
+                      ref={(x) => { this.subject = x; }}
                     />
                   </div>
                   <div className="form-group">
@@ -118,7 +118,7 @@ class AddForm extends Component {
                     <select
                       className="form-control"
                       id="category"
-                      ref={(c) => { this.category = c; }}
+                      ref={(x) => { this.category = x; }}
                     >
                       {AddForm.optionGenerator(categories)}
                     </select>
@@ -130,7 +130,7 @@ class AddForm extends Component {
                     <select
                       className="form-control"
                       id="assignee"
-                      ref={(c) => { this.assignee = c; }}
+                      ref={(x) => { this.assignee = x; }}
                     >
                       {AddForm.optionGenerator(assignees)}
                     </select>
@@ -142,7 +142,7 @@ class AddForm extends Component {
                     <select
                       className="form-control"
                       id="priority"
-                      ref={(c) => { this.priority = c; }}
+                      ref={(x) => { this.priority = x; }}
                     >
                       {AddForm.optionGenerator(priorities)}
                     </select>
@@ -161,16 +161,20 @@ class AddForm extends Component {
   }
 }
 
+// props validation
 AddForm.propTypes = {
   addItem: PropTypes.func,
 };
 AddForm.defaultProps = {
-  addItem: (item) => {
-    const { tableItems } = this.state;
-    tableItems.push(item);
-    this.setState({
-      tableItems,
-    });
-  },
+  addItem: item => ({
+    type: 'ADD_ITEM',
+    item,
+  }),
 };
-export default AddForm;
+
+const mapDispatcgToProps = dispatch => ({
+  addItem: bindActionCreators(addItem, dispatch),
+});
+
+// export default AddForm;
+export default connect(null, mapDispatcgToProps)(AddForm);
