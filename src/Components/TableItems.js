@@ -1,11 +1,10 @@
+import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-
 // import Component
 import TableItem from './TableItem';
 
-class TableItems extends PureComponent {
+export class TableItems extends PureComponent {
   render() {
     const { tableItems } = this.props;
     const allTableItems = tableItems.map(

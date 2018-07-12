@@ -1,14 +1,13 @@
-import './AddForm.css';
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import shortid from 'shortid';
-
 // action
 import { addItem } from '../actions';
+import './AddForm.css';
 
-class AddForm extends Component {
+export class AddForm extends Component {
   //  the method doesn’t use this, so make it a static method
   static showModal() {
     const modal = document.getElementById('myModal');

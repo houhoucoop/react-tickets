@@ -1,6 +1,6 @@
 import { createStore } from 'redux';
-import reducer from '../reducers';
 import { items } from '../fakeData';
+import reducer from '../reducers';
 
 const initialState = {
   tableItems: items,

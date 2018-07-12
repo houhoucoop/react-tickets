@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import { heads } from './fakeData';
-
+import AddForm from './Components/AddForm';
 // import Component
 import Header from './Components/Header';
 import TableHeads from './Components/TableHeads';
 import TableItems from './Components/TableItems';
-import AddForm from './Components/AddForm';
+import { heads } from './fakeData';
 
 class App extends Component {
   constructor() {
@@ -39,5 +38,4 @@ class App extends Component {
   }
 }
 
-// export default App;
 export default App;

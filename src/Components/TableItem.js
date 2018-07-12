@@ -1,14 +1,12 @@
-import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
-
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 // action
 import { deleteItem, saveItem } from '../actions';
 
-
-class TableItem extends Component {
+export class TableItem extends Component {
   // if status is closed, set text to gray color
   // if <tr> has been edited, add className 'update'
   static handleTrClass(update, status) {
@@ -91,14 +89,14 @@ class TableItem extends Component {
     } else {
       const { saveItem } = this.props;
       const { savedItem } = this.state;
-      const item = {
-        ...savedItem,
-        update: true,
-      };
-      saveItem(item);
       this.setState({
+        savedItem: {
+          ...savedItem,
+          update: true,
+        },
         isEditing: false,
       });
+      saveItem(savedItem);
     }
   }
 
@@ -140,9 +138,7 @@ class TableItem extends Component {
 
     if (isEditing) {
       return (
-        <tr className={
-          TableItem.handleTrClass(savedItem.update, savedItem.status)}
-        >
+        <tr className={TableItem.handleTrClass(savedItem.update, savedItem.status)}>
           <td>
             <span>
               {savedItem.id}
