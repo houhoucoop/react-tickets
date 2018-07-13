@@ -2,11 +2,15 @@
   "name": "hipster",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5000",
   "dependencies": {
     "bootstrap": "^4.1.1",
     "classnames": "^2.2.6",
+    "concurrently": "^3.6.0",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
+    "express": "^4.16.3",
+    "node": "^10.6.0",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -18,9 +22,11 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "nodemon src/server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "concurrently \"npm:start\" \"npm:server\""
   },
   "devDependencies": {
     "eslint": "^4.19.1",
