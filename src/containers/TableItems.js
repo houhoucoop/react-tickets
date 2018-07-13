@@ -4,9 +4,9 @@ import TableItem from './TableItem';
 
 class TableItems extends PureComponent {
   render() {
-    const { tableItems, deleteItem, saveItem } = this.props;
+    const { fetchItem, tableItems, deleteItem, saveItem } = this.props;
     const allTableItems = tableItems.map(
-      tableItem => <TableItem key={tableItem.id} tableItem={tableItem} deleteItem={deleteItem} saveItem={saveItem} />,
+      tableItem => <TableItem key={tableItem.id} fetchItem={fetchItem} tableItem={tableItem} deleteItem={deleteItem} saveItem={saveItem} />,
     );
     return (
       <tbody>
@@ -23,7 +23,7 @@ TableItems.propTypes = {
   saveItem: PropTypes.func,
 };
 TableItems.defaultProps = {
-  tableItems: {
+  tableItems: [{
     id: 'Hyq2-P3GQ',
     subject: 'A new rating has been received',
     category: 'Marketing',
@@ -31,7 +31,7 @@ TableItems.defaultProps = {
     priority: 'Medium',
     status: 'Open',
     update: false,
-  },
+  }],
   deleteItem: () => {},
   saveItem: () => {},
 };

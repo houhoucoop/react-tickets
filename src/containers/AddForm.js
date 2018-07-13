@@ -55,7 +55,7 @@ class AddForm extends Component {
     if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
-      const { addItem } = this.props;
+      const { fetchItem, addItem } = this.props;
       const item = {
         id: shortid.generate(),
         subject,
@@ -66,6 +66,7 @@ class AddForm extends Component {
         update: false,
       };
       addItem(item);
+      fetchItem();
       this.formReset();
     }
     e.preventDefault();

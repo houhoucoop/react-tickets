@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import TableHeads from '../components/TableHeads';
-import { heads } from '../fakeData';
+import heads from '../staticData';
 import AddForm from './AddForm';
 import TableItems from './TableItems';
 
@@ -18,9 +18,11 @@ export class MainSection extends Component {
 
   // mount data before render
   componentWillMount() {
+    const { actionsConnect } = this.props;
     this.setState({
       tableHeads: heads,
     });
+    actionsConnect.fetchItem();
   }
 
   render() {
@@ -28,11 +30,12 @@ export class MainSection extends Component {
     const { tableItems, actionsConnect } = this.props;
     return (
       <div className="container">
-        <AddForm addItem={actionsConnect.addItem} />
+        <AddForm fetchItem={actionsConnect.fetchItem} addItem={actionsConnect.addItem} />
         <table className="table mt-5">
           <TableHeads tableHeads={tableHeads} />
           <TableItems
             tableItems={tableItems}
+            fetchItem={actionsConnect.fetchItem}
             deleteItem={actionsConnect.deleteItem}
             saveItem={actionsConnect.saveItem}
           />

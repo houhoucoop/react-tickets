@@ -92,7 +92,7 @@ class TableItem extends Component {
     if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
-      const { saveItem } = this.props;
+      const { fetchItem, saveItem } = this.props;
       const { savedItem } = this.state;
       this.setState({
         savedItem: {
@@ -102,6 +102,7 @@ class TableItem extends Component {
         isEditing: false,
       });
       saveItem(savedItem);
+      fetchItem();
     }
   }
 
@@ -121,9 +122,10 @@ class TableItem extends Component {
 
   // Delete: props tableItem.id
   handleDeleteItem() {
-    const { tableItem, deleteItem } = this.props;
+    const { fetchItem, tableItem, deleteItem } = this.props;
     const theId = tableItem.id;
     deleteItem(theId);
+    fetchItem();
   }
 
   render() {
