@@ -1,9 +1,10 @@
+import * as types from '../../constants/ActionTypes';
 import * as actions from '../index';
 
 describe('actions', () => {
-  it('should create an action to add a item', () => {
+  it('addTodo should create ADD_ITEM action', () => {
     const item = {
-      id: 'dddd',
+      id: 'Hyq2-P3GQ',
       subject: 'A new rating has been received',
       category: 'Marketing',
       assignee: 'Erwin',
@@ -11,23 +12,20 @@ describe('actions', () => {
       status: 'Open',
       update: false,
     };
-    const expectedAction = {
-      type: actions.ADD_ITEM,
+    expect(actions.addItem(item)).toEqual({
+      type: types.ADD_ITEM,
       item,
-    };
-    expect(actions.addItem(item)).toEqual(expectedAction);
+    });
   });
-  it('should create an action to delete a item', () => {
-    const id = 'SkMB2fHEmm';
-    const expectedAction = {
-      type: actions.DELETE_ITEM,
-      id,
-    };
-    expect(actions.deleteItem(id)).toEqual(expectedAction);
+  it('addTodo should create DELETE_ITEM action', () => {
+    expect(actions.deleteItem('Hyq2-P3GQ')).toEqual({
+      type: types.DELETE_ITEM,
+      id: 'Hyq2-P3GQ',
+    });
   });
-  it('should create an action to save a item', () => {
+  it('addTodo should create SAVE_ITEM action', () => {
     const item = {
-      id: 'dddd',
+      id: 'Hyq2-P3GQ',
       subject: 'A new rating has been received',
       category: 'Marketing',
       assignee: 'Erwin',
@@ -35,10 +33,9 @@ describe('actions', () => {
       status: 'Open',
       update: true,
     };
-    const expectedAction = {
-      type: actions.SAVE_ITEM,
+    expect(actions.saveItem(item)).toEqual({
+      type: types.SAVE_ITEM,
       item,
-    };
-    expect(actions.saveItem(item)).toEqual(expectedAction);
+    });
   });
 });

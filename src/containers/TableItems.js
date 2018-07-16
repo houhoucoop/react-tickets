@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-// import Component
 import TableItem from './TableItem';
 
-export class TableItems extends PureComponent {
+class TableItems extends PureComponent {
   render() {
-    const { tableItems } = this.props;
+    const { tableItems, deleteItem, saveItem } = this.props;
     const allTableItems = tableItems.map(
-      tableItem => <TableItem key={tableItem.id} tableItem={tableItem} />,
+      tableItem => <TableItem key={tableItem.id} tableItem={tableItem} deleteItem={deleteItem} saveItem={saveItem} />,
     );
     return (
       <tbody>
@@ -21,6 +19,8 @@ export class TableItems extends PureComponent {
 // props validation
 TableItems.propTypes = {
   tableItems: PropTypes.arrayOf(PropTypes.object),
+  deleteItem: PropTypes.func,
+  saveItem: PropTypes.func,
 };
 TableItems.defaultProps = {
   tableItems: {
@@ -32,9 +32,8 @@ TableItems.defaultProps = {
     status: 'Open',
     update: false,
   },
+  deleteItem: () => {},
+  saveItem: () => {},
 };
 
-const mapStateToProps = state => ({
-  tableItems: state.tableItems,
-});
-export default connect(mapStateToProps)(TableItems);
+export default TableItems;

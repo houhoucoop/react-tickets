@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { AddForm } from '../AddForm';
+import AddForm from '../AddForm';
 
 describe('AddForm', () => {
   let wrapper;

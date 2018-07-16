@@ -1,14 +1,11 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import App from './App';
+import { MainSection } from '../MainSection';
 
-describe('App', () => {
+describe('MainSection', () => {
   let wrapper;
   beforeEach(() => {
-    wrapper = shallow(<App />);
-  });
-  it('should have 1 `className="App"`', () => {
-    expect(wrapper.find('.App').length).toBe(1);
+    wrapper = shallow(<MainSection />);
   });
   it('should render 1 <table>', () => {
     expect(wrapper.find('table').length).toBe(1);

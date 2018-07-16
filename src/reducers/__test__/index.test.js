@@ -1,4 +1,4 @@
-import * as types from '../../actions';
+import * as types from '../../constants/ActionTypes';
 import reducer from '../index';
 
 

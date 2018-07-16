@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-// import Component
 import TableHead from './TableHead';
 
 class TableHeads extends PureComponent {

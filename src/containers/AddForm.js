@@ -1,19 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import shortid from 'shortid';
-// action
-import { addItem } from '../actions';
 import './AddForm.css';
 
-export class AddForm extends Component {
+class AddForm extends Component {
   //  the method doesn’t use this, so make it a static method
-  static showModal() {
-    const modal = document.getElementById('myModal');
-    modal.classList.add('show');
-  }
-
   static optionGenerator(optionList) {
     return optionList.map(opt => (
       <option key={opt} value={opt}>
@@ -25,13 +16,20 @@ export class AddForm extends Component {
   constructor() {
     super();
     this.state = {
+      isOpen: false,
+      subject: '',
+      category: 'Billing',
+      assignee: 'Erwin',
+      priority: 'Normal',
       categories: [],
       assignees: [],
       priorities: [],
     };
 
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formReset = this.formReset.bind(this);
+    this.showModal = this.showModal.bind(this);
   }
 
   componentWillMount() {
@@ -42,18 +40,28 @@ export class AddForm extends Component {
     });
   }
 
+  handleChange(e) {
+    const name = e.target.id;
+    this.setState({
+      [name]: e.target.value,
+    });
+  }
+
   // if form submit, props addItem and reset the form
   handleSubmit(e) {
-    if (this.subject.value === '') {
+    const {
+      subject, category, assignee, priority,
+    } = this.state;
+    if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
       const { addItem } = this.props;
       const item = {
         id: shortid.generate(),
-        subject: this.subject.value,
-        category: this.category.value,
-        assignee: this.assignee.value,
-        priority: this.priority.value,
+        subject,
+        category,
+        assignee,
+        priority,
         status: 'Open',
         update: false,
       };
@@ -67,24 +75,35 @@ export class AddForm extends Component {
   formReset() {
     const modal = document.getElementById('myModal');
     modal.classList.remove('show');
-    this.subject.value = '';
-    this.category.value = 'Billing';
-    this.assignee.value = 'Erwin';
-    this.priority.value = 'Normal';
+    this.setState({
+      isOpen: false,
+      subject: '',
+      category: 'Billing',
+      assignee: 'Erwin',
+      priority: 'Normal',
+    });
+  }
+
+  showModal() {
+    this.setState({
+      isOpen: true,
+    });
   }
 
   render() {
-    const { categories, assignees, priorities } = this.state;
+    const {
+      isOpen, subject, category, assignee, priority, categories, assignees, priorities,
+    } = this.state;
     return (
       <div className="mt-3">
         <button
           type="button"
           className="btn btn-primary btn-sm"
-          onClick={AddForm.showModal}
+          onClick={this.showModal}
         >
           Add Ticket
         </button>
-        <div className="modal fade" id="myModal">
+        <div className={`modal fade ${isOpen ? 'show' : 'hide'}`} id="myModal">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
@@ -107,7 +126,8 @@ export class AddForm extends Component {
                       className="form-control"
                       id="subject"
                       rows="3"
-                      ref={(x) => { this.subject = x; }}
+                      value={subject}
+                      onChange={this.handleChange}
                     />
                   </div>
                   <div className="form-group">
@@ -117,7 +137,8 @@ export class AddForm extends Component {
                     <select
                       className="form-control"
                       id="category"
-                      ref={(x) => { this.category = x; }}
+                      value={category}
+                      onChange={this.handleChange}
                     >
                       {AddForm.optionGenerator(categories)}
                     </select>
@@ -129,7 +150,8 @@ export class AddForm extends Component {
                     <select
                       className="form-control"
                       id="assignee"
-                      ref={(x) => { this.assignee = x; }}
+                      value={assignee}
+                      onChange={this.handleChange}
                     >
                       {AddForm.optionGenerator(assignees)}
                     </select>
@@ -141,7 +163,8 @@ export class AddForm extends Component {
                     <select
                       className="form-control"
                       id="priority"
-                      ref={(x) => { this.priority = x; }}
+                      value={priority}
+                      onChange={this.handleChange}
                     >
                       {AddForm.optionGenerator(priorities)}
                     </select>
@@ -154,7 +177,6 @@ export class AddForm extends Component {
             </div>
           </div>
         </div>
-
       </div>
     );
   }
@@ -165,15 +187,7 @@ AddForm.propTypes = {
   addItem: PropTypes.func,
 };
 AddForm.defaultProps = {
-  addItem: item => ({
-    type: 'ADD_ITEM',
-    item,
-  }),
+  addItem: () => {},
 };
 
-const mapDispatcgToProps = dispatch => ({
-  addItem: bindActionCreators(addItem, dispatch),
-});
-
-// export default AddForm;
-export default connect(null, mapDispatcgToProps)(AddForm);
+export default AddForm;

@@ -1,12 +1,8 @@
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-// action
-import { deleteItem, saveItem } from '../actions';
 
-export class TableItem extends Component {
+class TableItem extends Component {
   // if status is closed, set text to gray color
   // if <tr> has been edited, add className 'update'
   static handleTrClass(update, status) {
@@ -31,12 +27,17 @@ export class TableItem extends Component {
   constructor() {
     super();
     this.state = {
+      subject: '',
+      category: '',
+      assignee: '',
+      priority: '',
+      status: '',
       savedItem: {},
       isEditing: false,
       categories: [],
       assignees: [],
       priorities: [],
-      status: [],
+      statusOpt: [],
     };
 
     this.editItem = this.editItem.bind(this);
@@ -50,11 +51,16 @@ export class TableItem extends Component {
   componentWillMount() {
     const { tableItem } = this.props;
     this.setState({
+      subject: tableItem.subject,
+      category: tableItem.category,
+      assignee: tableItem.assignee,
+      priority: tableItem.priority,
+      status: tableItem.status,
       savedItem: tableItem,
       categories: ['Billing', 'Dev', 'Marketing', 'Service'],
       assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
       priorities: ['Normal', 'Low', 'Medium', 'High'],
-      status: ['Open', 'Pending', 'Processing', 'Closed'],
+      statusOpt: ['Open', 'Pending', 'Processing', 'Closed'],
     });
   }
 
@@ -68,23 +74,22 @@ export class TableItem extends Component {
   }
 
   // get new value when editing
-  handleChange() {
+  handleChange(e) {
     const { savedItem } = this.state;
+    const name = e.target.id;
     this.setState({
+      [name]: e.target.value,
       savedItem: {
         ...savedItem,
-        category: this.category.value,
-        subject: this.subject.value,
-        assignee: this.assignee.value,
-        priority: this.priority.value,
-        status: this.status.value,
+        [name]: e.target.value,
       },
     });
   }
 
   // Save: set update to true and props saveItem, then set is editing to false
   handleSaveItem() {
-    if (this.subject.value === '') {
+    const { subject } = this.state;
+    if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
       const { saveItem } = this.props;
@@ -104,8 +109,13 @@ export class TableItem extends Component {
   cancelEdit() {
     const { tableItem } = this.props;
     this.setState({
-      isEditing: false,
+      subject: tableItem.subject,
+      category: tableItem.category,
+      assignee: tableItem.assignee,
+      priority: tableItem.priority,
+      status: tableItem.status,
       savedItem: tableItem,
+      isEditing: false,
     });
   }
 
@@ -118,7 +128,7 @@ export class TableItem extends Component {
 
   render() {
     const {
-      isEditing, savedItem, categories, assignees, priorities, status,
+      subject, category, assignee, priority, status, isEditing, savedItem, categories, assignees, priorities, statusOpt,
     } = this.state;
 
     // set badge color
@@ -148,8 +158,8 @@ export class TableItem extends Component {
             <span>
               <textarea
                 className="form-control"
-                ref={(c) => { this.subject = c; }}
-                value={savedItem.subject}
+                id="subject"
+                value={subject}
                 onChange={this.handleChange}
               />
             </span>
@@ -158,8 +168,8 @@ export class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.category = c; }}
-                value={savedItem.category}
+                id="category"
+                value={category}
                 onChange={this.handleChange}
               >
                 {TableItem.optionGenerator(categories)}
@@ -170,8 +180,8 @@ export class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.assignee = c; }}
-                value={savedItem.assignee}
+                id="assignee"
+                value={assignee}
                 onChange={this.handleChange}
               >
                 {TableItem.optionGenerator(assignees)}
@@ -182,8 +192,8 @@ export class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.priority = c; }}
-                value={savedItem.priority}
+                id="priority"
+                value={priority}
                 onChange={this.handleChange}
               >
                 {TableItem.optionGenerator(priorities)}
@@ -194,11 +204,11 @@ export class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.status = c; }}
-                value={savedItem.status}
+                id="status"
+                value={status}
                 onChange={this.handleChange}
               >
-                {TableItem.optionGenerator(status)}
+                {TableItem.optionGenerator(statusOpt)}
               </select>
             </span>
           </td>
@@ -300,8 +310,8 @@ TableItem.propTypes = {
     status: PropTypes.string,
     update: PropTypes.bool,
   }),
-  saveItem: PropTypes.func,
   deleteItem: PropTypes.func,
+  saveItem: PropTypes.func,
 };
 
 TableItem.defaultProps = {
@@ -314,14 +324,8 @@ TableItem.defaultProps = {
     status: 'Open',
     update: false,
   },
-  saveItem: item => ({
-    type: 'SAVE_ITEM',
-    item,
-  }),
-  deleteItem: id => ({
-    type: 'DELETE_ITEM',
-    id,
-  }),
+  deleteItem: () => {},
+  saveItem: () => {},
 };
 
 
@@ -353,23 +357,8 @@ NormalContent.defaultProps = {
   },
   priorityClass: 'badge badge-pill badge-secondary',
   statusClass: 'badge badge-pill badge-primary',
-  editItem: () => {
-    const { tableItem } = this.props;
-    this.setState({
-      savedItem: tableItem,
-      isEditing: true,
-    });
-  },
-  handleDeleteItem: () => {
-    const { tableItem, deleteItem } = this.props;
-    const theId = tableItem.id;
-    deleteItem(theId);
-  },
+  editItem: () => {},
+  handleDeleteItem: () => {},
 };
 
-const mapDispatchToProps = dispatch => ({
-  deleteItem: bindActionCreators(deleteItem, dispatch),
-  saveItem: bindActionCreators(saveItem, dispatch),
-});
-
-export default connect(null, mapDispatchToProps)(TableItem);
+export default TableItem;

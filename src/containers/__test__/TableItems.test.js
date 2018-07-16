@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { TableItems } from '../TableItems';
+import TableItems from '../TableItems';
 
 describe('TableItem', () => {
   let tableItems;

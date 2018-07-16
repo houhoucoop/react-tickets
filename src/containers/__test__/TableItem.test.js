@@ -1,6 +1,7 @@
 import React from 'react';
 import { mount } from 'enzyme';
-import { TableItem } from '../TableItem';
+import TableItem from '../TableItem';
+import { deleteItem, saveItem } from '../../actions';
 
 describe('TableItem', () => {
   let tableItem;
@@ -19,6 +20,8 @@ describe('TableItem', () => {
       <TableItem
         key="1"
         tableItem={tableItem}
+        deleteItem={deleteItem}
+        saveItem={saveItem}
       />,
     );
   });
