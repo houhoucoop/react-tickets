@@ -1,15 +1,10 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import './AddForm.css';
 import shortid from 'shortid';
+import './AddForm.css';
 
 class AddForm extends Component {
   //  the method doesn’t use this, so make it a static method
-  static showModal() {
-    const modal = document.getElementById('myModal');
-    modal.classList.add('show');
-  }
-
   static optionGenerator(optionList) {
     return optionList.map(opt => (
       <option key={opt} value={opt}>
@@ -21,14 +16,20 @@ class AddForm extends Component {
   constructor() {
     super();
     this.state = {
-      addedItem: {},
+      isOpen: false,
+      subject: '',
+      category: 'Billing',
+      assignee: 'Erwin',
+      priority: 'Normal',
       categories: [],
       assignees: [],
       priorities: [],
     };
 
+    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.formReset = this.formReset.bind(this);
+    this.showModal = this.showModal.bind(this);
   }
 
   componentWillMount() {
@@ -39,27 +40,33 @@ class AddForm extends Component {
     });
   }
 
+  handleChange(e) {
+    const name = e.target.id;
+    this.setState({
+      [name]: e.target.value,
+    });
+  }
+
   // if form submit, props addItem and reset the form
   handleSubmit(e) {
-    if (this.subject.value === '') {
+    const {
+      subject, category, assignee, priority,
+    } = this.state;
+    if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
-      this.setState({
-        addedItem: {
-          id: shortid.generate(),
-          subject: this.subject.value,
-          category: this.category.value,
-          assignee: this.assignee.value,
-          priority: this.priority.value,
-          status: 'Open',
-          update: false,
-        },
-      }, function sendProps() {
-        const { addedItem } = this.state;
-        const { addItem } = this.props;
-        addItem(addedItem);
-        this.formReset();
-      });
+      const { addItem } = this.props;
+      const item = {
+        id: shortid.generate(),
+        subject,
+        category,
+        assignee,
+        priority,
+        status: 'Open',
+        update: false,
+      };
+      addItem(item);
+      this.formReset();
     }
     e.preventDefault();
   }
@@ -68,24 +75,35 @@ class AddForm extends Component {
   formReset() {
     const modal = document.getElementById('myModal');
     modal.classList.remove('show');
-    this.subject.value = '';
-    this.category.value = 'Billing';
-    this.assignee.value = 'Erwin';
-    this.priority.value = 'Normal';
+    this.setState({
+      isOpen: false,
+      subject: '',
+      category: 'Billing',
+      assignee: 'Erwin',
+      priority: 'Normal',
+    });
+  }
+
+  showModal() {
+    this.setState({
+      isOpen: true,
+    });
   }
 
   render() {
-    const { categories, assignees, priorities } = this.state;
+    const {
+      isOpen, subject, category, assignee, priority, categories, assignees, priorities,
+    } = this.state;
     return (
       <div className="mt-3">
         <button
           type="button"
           className="btn btn-primary btn-sm"
-          onClick={AddForm.showModal}
+          onClick={this.showModal}
         >
           Add Ticket
         </button>
-        <div className="modal fade" id="myModal">
+        <div className={`modal fade ${isOpen ? 'show' : 'hide'}`} id="myModal">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
@@ -108,7 +126,8 @@ class AddForm extends Component {
                       className="form-control"
                       id="subject"
                       rows="3"
-                      ref={(c) => { this.subject = c; }}
+                      value={subject}
+                      onChange={this.handleChange}
                     />
                   </div>
                   <div className="form-group">
@@ -118,7 +137,8 @@ class AddForm extends Component {
                     <select
                       className="form-control"
                       id="category"
-                      ref={(c) => { this.category = c; }}
+                      value={category}
+                      onChange={this.handleChange}
                     >
                       {AddForm.optionGenerator(categories)}
                     </select>
@@ -130,7 +150,8 @@ class AddForm extends Component {
                     <select
                       className="form-control"
                       id="assignee"
-                      ref={(c) => { this.assignee = c; }}
+                      value={assignee}
+                      onChange={this.handleChange}
                     >
                       {AddForm.optionGenerator(assignees)}
                     </select>
@@ -142,7 +163,8 @@ class AddForm extends Component {
                     <select
                       className="form-control"
                       id="priority"
-                      ref={(c) => { this.priority = c; }}
+                      value={priority}
+                      onChange={this.handleChange}
                     >
                       {AddForm.optionGenerator(priorities)}
                     </select>
@@ -155,22 +177,17 @@ class AddForm extends Component {
             </div>
           </div>
         </div>
-
       </div>
     );
   }
 }
 
+// props validation
 AddForm.propTypes = {
   addItem: PropTypes.func,
 };
 AddForm.defaultProps = {
-  addItem: (item) => {
-    const { tableItems } = this.state;
-    tableItems.push(item);
-    this.setState({
-      tableItems,
-    });
-  },
+  addItem: () => {},
 };
+
 export default AddForm;

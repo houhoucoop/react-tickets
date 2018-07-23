@@ -12,6 +12,7 @@ class TableHead extends PureComponent {
   }
 }
 
+// props validation
 TableHead.propTypes = {
   tableHead: PropTypes.shape({
     id: PropTypes.string,

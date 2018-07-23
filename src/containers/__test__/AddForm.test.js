@@ -3,22 +3,9 @@ import { shallow } from 'enzyme';
 import AddForm from '../AddForm';
 
 describe('AddForm', () => {
-  let addItems;
   let wrapper;
   beforeEach(() => {
-    addItems = [{
-      id: 'BJ7jE19MX',
-      category: 'Billing',
-      subject: 'Billing mistake',
-      assignee: 'Erwin',
-      priority: 'Normal',
-      status: 'Open',
-      update: false,
-    }];
-    wrapper = shallow(<AddForm addItems={addItems} />);
-  });
-  it('should return props as', () => {
-    expect(wrapper.instance().props.addItems).toBe(addItems);
+    wrapper = shallow(<AddForm />);
   });
   it('form reset should return as', () => {
     expect(wrapper.find('#subject').at(0).text()).toBe('');

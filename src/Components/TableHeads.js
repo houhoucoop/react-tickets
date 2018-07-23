@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
-
-// import Component
 import TableHead from './TableHead';
 
 class TableHeads extends PureComponent {
@@ -20,6 +18,7 @@ class TableHeads extends PureComponent {
   }
 }
 
+// props validation
 TableHeads.propTypes = {
   tableHeads: PropTypes.arrayOf(PropTypes.object),
 };

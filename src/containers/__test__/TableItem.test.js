@@ -1,11 +1,11 @@
 import React from 'react';
 import { mount } from 'enzyme';
 import TableItem from '../TableItem';
+import { deleteItem, saveItem } from '../../actions';
 
 describe('TableItem', () => {
   let tableItem;
   let wrapper;
-  let onDelete;
   beforeEach(() => {
     tableItem = {
       id: 'rkQZyTFGX',
@@ -16,12 +16,12 @@ describe('TableItem', () => {
       status: 'Open',
       update: false,
     };
-    onDelete = jest.fn();
     wrapper = mount(
       <TableItem
         key="1"
         tableItem={tableItem}
-        onDelete={onDelete}
+        deleteItem={deleteItem}
+        saveItem={saveItem}
       />,
     );
   });
@@ -36,10 +36,6 @@ describe('TableItem', () => {
     expect(wrapper.find('textarea').length).toBe(1);
     expect(wrapper.find('.save-btn').length).toBe(1);
     expect(wrapper.find('.cancel-btn').length).toBe(1);
-  });
-  it('onDelete should be called when click delete button', () => {
-    wrapper.find('.delete-btn').simulate('click');
-    expect(onDelete).toHaveBeenCalled();
   });
   it('should return props as', () => {
     expect(wrapper.instance().props.tableItem).toBe(tableItem);

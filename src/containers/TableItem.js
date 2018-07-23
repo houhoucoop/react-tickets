@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 class TableItem extends Component {
@@ -27,30 +27,40 @@ class TableItem extends Component {
   constructor() {
     super();
     this.state = {
+      subject: '',
+      category: '',
+      assignee: '',
+      priority: '',
+      status: '',
       savedItem: {},
       isEditing: false,
       categories: [],
       assignees: [],
       priorities: [],
-      status: [],
+      statusOpt: [],
     };
 
     this.editItem = this.editItem.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.saveItem = this.saveItem.bind(this);
+    this.handleSaveItem = this.handleSaveItem.bind(this);
     this.cancelEdit = this.cancelEdit.bind(this);
-    this.deleteItem = this.deleteItem.bind(this);
+    this.handleDeleteItem = this.handleDeleteItem.bind(this);
   }
 
   // mount data before render
   componentWillMount() {
     const { tableItem } = this.props;
     this.setState({
+      subject: tableItem.subject,
+      category: tableItem.category,
+      assignee: tableItem.assignee,
+      priority: tableItem.priority,
+      status: tableItem.status,
       savedItem: tableItem,
       categories: ['Billing', 'Dev', 'Marketing', 'Service'],
       assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
       priorities: ['Normal', 'Low', 'Medium', 'High'],
-      status: ['Open', 'Pending', 'Processing', 'Closed'],
+      statusOpt: ['Open', 'Pending', 'Processing', 'Closed'],
     });
   }
 
@@ -64,39 +74,34 @@ class TableItem extends Component {
   }
 
   // get new value when editing
-  handleChange() {
+  handleChange(e) {
     const { savedItem } = this.state;
+    const name = e.target.id;
     this.setState({
+      [name]: e.target.value,
       savedItem: {
         ...savedItem,
-        category: this.category.value,
-        subject: this.subject.value,
-        assignee: this.assignee.value,
-        priority: this.priority.value,
-        status: this.status.value,
+        [name]: e.target.value,
       },
     });
   }
 
   // Save: set update to true and props saveItem, then set is editing to false
-  saveItem() {
-    if (this.subject.value === '') {
+  handleSaveItem() {
+    const { subject } = this.state;
+    if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
+      const { saveItem } = this.props;
       const { savedItem } = this.state;
       this.setState({
         savedItem: {
           ...savedItem,
           update: true,
         },
-      }, function sendProps() {
-        const { savedItem } = this.state;
-        const { saveItem } = this.props;
-        saveItem(savedItem);
-        this.setState({
-          isEditing: false,
-        });
+        isEditing: false,
       });
+      saveItem(savedItem);
     }
   }
 
@@ -104,22 +109,28 @@ class TableItem extends Component {
   cancelEdit() {
     const { tableItem } = this.props;
     this.setState({
-      isEditing: false,
+      subject: tableItem.subject,
+      category: tableItem.category,
+      assignee: tableItem.assignee,
+      priority: tableItem.priority,
+      status: tableItem.status,
       savedItem: tableItem,
+      isEditing: false,
     });
   }
 
   // Delete: props tableItem.id
-  deleteItem() {
-    const { tableItem, onDelete } = this.props;
+  handleDeleteItem() {
+    const { tableItem, deleteItem } = this.props;
     const theId = tableItem.id;
-    onDelete(theId);
+    deleteItem(theId);
   }
 
   render() {
     const {
-      isEditing, savedItem, categories, assignees, priorities, status,
+      subject, category, assignee, priority, status, isEditing, savedItem, categories, assignees, priorities, statusOpt,
     } = this.state;
+
     // set badge color
     const priorityClass = classNames('badge badge-pill', {
       'badge-secondary': (savedItem.priority === 'Normal'),
@@ -137,9 +148,7 @@ class TableItem extends Component {
 
     if (isEditing) {
       return (
-        <tr className={
-          TableItem.handleTrClass(savedItem.update, savedItem.status)}
-        >
+        <tr className={TableItem.handleTrClass(savedItem.update, savedItem.status)}>
           <td>
             <span>
               {savedItem.id}
@@ -149,8 +158,8 @@ class TableItem extends Component {
             <span>
               <textarea
                 className="form-control"
-                ref={(c) => { this.subject = c; }}
-                value={savedItem.subject}
+                id="subject"
+                value={subject}
                 onChange={this.handleChange}
               />
             </span>
@@ -159,8 +168,8 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.category = c; }}
-                value={savedItem.category}
+                id="category"
+                value={category}
                 onChange={this.handleChange}
               >
                 {TableItem.optionGenerator(categories)}
@@ -171,8 +180,8 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.assignee = c; }}
-                value={savedItem.assignee}
+                id="assignee"
+                value={assignee}
                 onChange={this.handleChange}
               >
                 {TableItem.optionGenerator(assignees)}
@@ -183,8 +192,8 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.priority = c; }}
-                value={savedItem.priority}
+                id="priority"
+                value={priority}
                 onChange={this.handleChange}
               >
                 {TableItem.optionGenerator(priorities)}
@@ -195,11 +204,11 @@ class TableItem extends Component {
             <span>
               <select
                 className="form-control"
-                ref={(c) => { this.status = c; }}
-                value={savedItem.status}
+                id="status"
+                value={status}
                 onChange={this.handleChange}
               >
-                {TableItem.optionGenerator(status)}
+                {TableItem.optionGenerator(statusOpt)}
               </select>
             </span>
           </td>
@@ -207,7 +216,7 @@ class TableItem extends Component {
             <button
               type="button"
               className="btn btn btn-info btn-sm mr-2 save-btn"
-              onClick={this.saveItem}
+              onClick={this.handleSaveItem}
             >
               Save
             </button>
@@ -228,7 +237,7 @@ class TableItem extends Component {
         priorityClass={priorityClass}
         statusClass={statusClass}
         editItem={this.editItem}
-        deleteItem={this.deleteItem}
+        handleDeleteItem={this.handleDeleteItem}
       />
     );
   }
@@ -236,7 +245,7 @@ class TableItem extends Component {
 
 function NormalContent(props) {
   const {
-    savedItem, priorityClass, statusClass, editItem, deleteItem,
+    savedItem, priorityClass, statusClass, editItem, handleDeleteItem,
   } = props;
   return (
     <tr className={TableItem.handleTrClass(savedItem.update, savedItem.status)}>
@@ -281,7 +290,7 @@ function NormalContent(props) {
         <button
           type="button"
           className="btn btn-outline-danger btn-sm delete-btn"
-          onClick={deleteItem}
+          onClick={handleDeleteItem}
         >
           Delete
         </button>
@@ -290,6 +299,7 @@ function NormalContent(props) {
   );
 }
 
+// props validation
 TableItem.propTypes = {
   tableItem: PropTypes.shape({
     id: PropTypes.string,
@@ -300,7 +310,7 @@ TableItem.propTypes = {
     status: PropTypes.string,
     update: PropTypes.bool,
   }),
-  onDelete: PropTypes.func,
+  deleteItem: PropTypes.func,
   saveItem: PropTypes.func,
 };
 
@@ -314,18 +324,41 @@ TableItem.defaultProps = {
     status: 'Open',
     update: false,
   },
-  onDelete: (id) => {
-    const { tableItems } = this.state;
-    const index = tableItems.findIndex(x => x.id === id);
-    tableItems.splice(index, 1);
-    this.setState({
-      tableItems,
-    });
+  deleteItem: () => {},
+  saveItem: () => {},
+};
+
+
+NormalContent.propTypes = {
+  savedItem: PropTypes.shape({
+    id: PropTypes.string,
+    subject: PropTypes.string,
+    category: PropTypes.string,
+    assignee: PropTypes.string,
+    priority: PropTypes.string,
+    status: PropTypes.string,
+    update: PropTypes.bool,
+  }),
+  priorityClass: PropTypes.string,
+  statusClass: PropTypes.string,
+  editItem: PropTypes.func,
+  handleDeleteItem: PropTypes.func,
+};
+
+NormalContent.defaultProps = {
+  savedItem: {
+    id: 'Hyq2-P3GQ',
+    subject: 'A new rating has been received',
+    category: 'Marketing',
+    assignee: 'Erwin',
+    priority: 'Medium',
+    status: 'Open',
+    update: false,
   },
-  saveItem: (item) => {
-    const { onSave } = this.props;
-    onSave(item);
-  },
+  priorityClass: 'badge badge-pill badge-secondary',
+  statusClass: 'badge badge-pill badge-primary',
+  editItem: () => {},
+  handleDeleteItem: () => {},
 };
 
 export default TableItem;
