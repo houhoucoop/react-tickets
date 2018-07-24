@@ -55,7 +55,7 @@ class AddForm extends Component {
     if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
-      const { fetchItem, addItem } = this.props;
+      const { addItem } = this.props;
       const item = {
         id: shortid.generate(),
         subject,
@@ -66,7 +66,6 @@ class AddForm extends Component {
         update: false,
       };
       addItem(item);
-      fetchItem();
       this.formReset();
     }
     e.preventDefault();
@@ -186,9 +185,6 @@ class AddForm extends Component {
 // props validation
 AddForm.propTypes = {
   addItem: PropTypes.func,
-};
-AddForm.defaultProps = {
-  addItem: () => {},
 };
 
 export default AddForm;

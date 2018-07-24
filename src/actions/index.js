@@ -1,29 +1,46 @@
+import axios from 'axios';
 import * as types from '../constants/ActionTypes';
-import db from '../dbconfig';
-
-const dbRef = db.ref().child('items');
 
 export const fetchItem = () => (dispatch) => {
-  dbRef.once('value', (snap) => {
-    const items = [];
-    snap.forEach((item) => {
-      items.push(item.val());
-    });
+  axios.get('/api/items').then((res) => {
     dispatch({
       type: types.FETCH_ITEM,
-      payload: items,
+      payload: res.data,
     });
+  }).catch((error) => {
+    console.log(error);
   });
 };
 export const addItem = item => (dispatch) => {
-  dbRef.child(item.id).set(
-    item,
-  );
+  axios.post('/api/items', item).then((res) => {
+    dispatch({
+      type: types.FETCH_ITEM,
+      payload: res.data,
+    });
+  }).catch((error) => {
+    console.log(error);
+  });
 };
 export const deleteItem = id => (dispatch) => {
-  dbRef.child(id).remove();
+  const url = `/api/items/${id}`;
+  axios.delete(url).then((res) => {
+    dispatch({
+      type: types.FETCH_ITEM,
+      payload: res.data,
+    });
+  }).catch((error) => {
+    console.log(error);
+  });
 };
 
 export const saveItem = item => (dispatch) => {
-  dbRef.child(item.id).update(item);
+  const url = `/api/items/${item.id}`;
+  axios.put(url, item).then((res) => {
+    dispatch({
+      type: types.FETCH_ITEM,
+      payload: res.data,
+    });
+  }).catch((error) => {
+    console.log(error);
+  });
 };

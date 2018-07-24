@@ -30,12 +30,11 @@ export class MainSection extends Component {
     const { tableItems, actionsConnect } = this.props;
     return (
       <div className="container">
-        <AddForm fetchItem={actionsConnect.fetchItem} addItem={actionsConnect.addItem} />
+        <AddForm addItem={actionsConnect.addItem} />
         <table className="table mt-5">
           <TableHeads tableHeads={tableHeads} />
           <TableItems
             tableItems={tableItems}
-            fetchItem={actionsConnect.fetchItem}
             deleteItem={actionsConnect.deleteItem}
             saveItem={actionsConnect.saveItem}
           />
@@ -64,11 +63,6 @@ MainSection.defaultProps = {
     status: 'Open',
     update: false,
   }],
-  actionsConnect: {
-    addItem: () => {},
-    deleteItem: () => {},
-    saveItem: () => {},
-  },
 };
 
 const mapStateToProps = state => ({

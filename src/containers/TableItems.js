@@ -4,9 +4,16 @@ import TableItem from './TableItem';
 
 class TableItems extends PureComponent {
   render() {
-    const { fetchItem, tableItems, deleteItem, saveItem } = this.props;
+    const { tableItems, deleteItem, saveItem } = this.props;
     const allTableItems = tableItems.map(
-      tableItem => <TableItem key={tableItem.id} fetchItem={fetchItem} tableItem={tableItem} deleteItem={deleteItem} saveItem={saveItem} />,
+      tableItem => (
+        <TableItem
+          key={tableItem.id}
+          tableItem={tableItem}
+          deleteItem={deleteItem}
+          saveItem={saveItem}
+        />
+      ),
     );
     return (
       <tbody>
@@ -32,8 +39,6 @@ TableItems.defaultProps = {
     status: 'Open',
     update: false,
   }],
-  deleteItem: () => {},
-  saveItem: () => {},
 };
 
 export default TableItems;

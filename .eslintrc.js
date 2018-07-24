@@ -13,6 +13,7 @@ module.exports = {
             "required": {
                 "some": [ "nesting", "id" ]
             },
-        }]
+        }],
+        "react/require-default-props": [0, { forbidDefaultForRequired: 0}]
     }
 };

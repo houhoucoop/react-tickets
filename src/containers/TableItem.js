@@ -92,7 +92,7 @@ class TableItem extends Component {
     if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
-      const { fetchItem, saveItem } = this.props;
+      const { saveItem } = this.props;
       const { savedItem } = this.state;
       this.setState({
         savedItem: {
@@ -102,7 +102,6 @@ class TableItem extends Component {
         isEditing: false,
       });
       saveItem(savedItem);
-      fetchItem();
     }
   }
 
@@ -122,15 +121,24 @@ class TableItem extends Component {
 
   // Delete: props tableItem.id
   handleDeleteItem() {
-    const { fetchItem, tableItem, deleteItem } = this.props;
+    const { tableItem, deleteItem } = this.props;
     const theId = tableItem.id;
     deleteItem(theId);
-    fetchItem();
   }
 
   render() {
     const {
-      subject, category, assignee, priority, status, isEditing, savedItem, categories, assignees, priorities, statusOpt,
+      subject,
+      category,
+      assignee,
+      priority,
+      status,
+      isEditing,
+      savedItem,
+      categories,
+      assignees,
+      priorities,
+      statusOpt,
     } = this.state;
 
     // set badge color
@@ -326,8 +334,6 @@ TableItem.defaultProps = {
     status: 'Open',
     update: false,
   },
-  deleteItem: () => {},
-  saveItem: () => {},
 };
 
 
@@ -359,8 +365,6 @@ NormalContent.defaultProps = {
   },
   priorityClass: 'badge badge-pill badge-secondary',
   statusClass: 'badge badge-pill badge-primary',
-  editItem: () => {},
-  handleDeleteItem: () => {},
 };
 
 export default TableItem;
