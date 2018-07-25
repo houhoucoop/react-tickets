@@ -2,12 +2,7 @@
   "name": "hipster",
   "version": "0.1.0",
   "private": true,
-  "proxy": {
-    "/api": {
-      "target": "http://localhost:8080",
-      "secure": false
-    }
-  },
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "axios": "^0.18.0",
     "bootstrap": "^4.1.2",
@@ -37,6 +32,7 @@
     "dev": "concurrently \"npm:start\" \"npm:server\""
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.15.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-config-standard": "^11.0.0",
@@ -46,6 +42,7 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-react": "^7.10.0",
     "eslint-plugin-standard": "^3.1.0",
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.18.3",
+    "supertest": "^3.1.0"
   }
 }
