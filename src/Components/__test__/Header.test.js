@@ -13,8 +13,4 @@ describe('Header', () => {
   it('should render 1 <nav>', () => {
     expect(wrapper.find('nav').length).toBe(1);
   });
-  it('should render 1 <span>', () => {
-    expect(wrapper.find('span').length).toBe(1);
-    expect(wrapper.find('span').at(0).text()).toBe('React Ticket');
-  });
 });

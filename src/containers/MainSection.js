@@ -5,10 +5,9 @@ import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import TableHeads from '../components/TableHeads';
 import heads from '../staticData';
-import AddForm from './AddForm';
 import TableItems from './TableItems';
 
-export class MainSection extends Component {
+class MainSection extends Component {
   constructor() {
     super();
     this.state = {
@@ -30,13 +29,11 @@ export class MainSection extends Component {
     const { tableItems, actionsConnect } = this.props;
     return (
       <div className="container">
-        <AddForm addItem={actionsConnect.addItem} />
         <table className="table mt-5">
           <TableHeads tableHeads={tableHeads} />
           <TableItems
             tableItems={tableItems}
             deleteItem={actionsConnect.deleteItem}
-            saveItem={actionsConnect.saveItem}
           />
         </table>
       </div>

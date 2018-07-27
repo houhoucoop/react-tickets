@@ -44,7 +44,7 @@ h1 {
 .closed {
   color: #999999;
 }
-.closed .badge {
+.closed.badge {
   background: #f8f9fa;
   color: #999999;
 }

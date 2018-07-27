@@ -34,13 +34,6 @@ apiRouter.get('/items', (req, res) => {
   res.send(itemList());
 });
 
-// Retrieve single item by ID
-apiRouter.get('/items/:id', (req, res) => {
-  const dbItems = itemList();
-  const item = dbItems.find(x => x.id === req.params.id);
-  res.send(item);
-});
-
 // Create a new item
 apiRouter.post('/items', (req, res) => {
   dbRef.child(req.body.id).set(
