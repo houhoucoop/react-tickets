@@ -128,7 +128,17 @@ class TableItem extends Component {
 
   render() {
     const {
-      subject, category, assignee, priority, status, isEditing, savedItem, categories, assignees, priorities, statusOpt,
+      subject,
+      category,
+      assignee,
+      priority,
+      status,
+      isEditing,
+      savedItem,
+      categories,
+      assignees,
+      priorities,
+      statusOpt,
     } = this.state;
 
     // set badge color
@@ -324,8 +334,6 @@ TableItem.defaultProps = {
     status: 'Open',
     update: false,
   },
-  deleteItem: () => {},
-  saveItem: () => {},
 };
 
 
@@ -357,8 +365,6 @@ NormalContent.defaultProps = {
   },
   priorityClass: 'badge badge-pill badge-secondary',
   statusClass: 'badge badge-pill badge-primary',
-  editItem: () => {},
-  handleDeleteItem: () => {},
 };
 
 export default TableItem;

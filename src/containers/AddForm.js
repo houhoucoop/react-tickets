@@ -186,8 +186,5 @@ class AddForm extends Component {
 AddForm.propTypes = {
   addItem: PropTypes.func,
 };
-AddForm.defaultProps = {
-  addItem: () => {},
-};
 
 export default AddForm;

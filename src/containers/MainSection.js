@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actions from '../actions';
 import TableHeads from '../components/TableHeads';
-import { heads } from '../fakeData';
+import heads from '../staticData';
 import AddForm from './AddForm';
 import TableItems from './TableItems';
 
@@ -18,9 +18,11 @@ export class MainSection extends Component {
 
   // mount data before render
   componentWillMount() {
+    const { actionsConnect } = this.props;
     this.setState({
       tableHeads: heads,
     });
+    actionsConnect.fetchItem();
   }
 
   render() {
@@ -61,11 +63,6 @@ MainSection.defaultProps = {
     status: 'Open',
     update: false,
   }],
-  actionsConnect: {
-    addItem: () => {},
-    deleteItem: () => {},
-    saveItem: () => {},
-  },
 };
 
 const mapStateToProps = state => ({

@@ -1,41 +1,43 @@
-import * as types from '../../constants/ActionTypes';
-import * as actions from '../index';
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+
+const item = {
+  id: 'Hyq2-P3GQ',
+  subject: 'A new rating has been received',
+  category: 'Marketing',
+  assignee: 'Erwin',
+  priority: 'Medium',
+  status: 'Open',
+  update: false,
+};
 
 describe('actions', () => {
-  it('addTodo should create ADD_ITEM action', () => {
-    const item = {
-      id: 'Hyq2-P3GQ',
-      subject: 'A new rating has been received',
-      category: 'Marketing',
-      assignee: 'Erwin',
-      priority: 'Medium',
-      status: 'Open',
-      update: false,
-    };
-    expect(actions.addItem(item)).toEqual({
-      type: types.ADD_ITEM,
-      item,
+  it('should get /api/items', () => {
+    const mock = new MockAdapter(axios);
+    mock.onGet('/api/items').reply(200, item);
+    axios.get('/api/items').then((res) => {
+      expect(res.data).toEqual(item);
     });
   });
-  it('addTodo should create DELETE_ITEM action', () => {
-    expect(actions.deleteItem('Hyq2-P3GQ')).toEqual({
-      type: types.DELETE_ITEM,
-      id: 'Hyq2-P3GQ',
+  it('should post /api/items', () => {
+    const mock = new MockAdapter(axios);
+    mock.onPost('/api/items').reply(200, item);
+    axios.post('/api/items').then((res) => {
+      expect(res.data).toEqual(item);
     });
   });
-  it('addTodo should create SAVE_ITEM action', () => {
-    const item = {
-      id: 'Hyq2-P3GQ',
-      subject: 'A new rating has been received',
-      category: 'Marketing',
-      assignee: 'Erwin',
-      priority: 'Medium',
-      status: 'Open',
-      update: true,
-    };
-    expect(actions.saveItem(item)).toEqual({
-      type: types.SAVE_ITEM,
-      item,
+  it('should delete /api/items/:id', () => {
+    const mock = new MockAdapter(axios);
+    mock.onDelete('/api/items/-64JwFNsW').reply(200, item);
+    axios.delete('/api/items/-64JwFNsW').then((res) => {
+      expect(res.data).toEqual(item);
+    });
+  });
+  it('should save /api/items/:id', () => {
+    const mock = new MockAdapter(axios);
+    mock.onPut('/api/items/-64JwFNsW').reply(200, item);
+    axios.put('/api/items/-64JwFNsW').then((res) => {
+      expect(res.data).toEqual(item);
     });
   });
 });

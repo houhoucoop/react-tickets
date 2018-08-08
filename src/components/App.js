@@ -1,11 +1,11 @@
 import React from 'react';
+import TheMainSection from '../containers/MainSection';
 import Header from './Header';
-import MainSection from '../containers/MainSection';
 
 const App = () => (
   <div className="App">
     <Header />
-    <MainSection />
+    <TheMainSection />
   </div>
 );
 
