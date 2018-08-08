@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import AddForm from '../AddForm';
+import { AddForm } from '../AddForm';
 
 describe('AddForm', () => {
   let wrapper;
@@ -12,9 +12,6 @@ describe('AddForm', () => {
     expect(wrapper.find('#category option').at(0).text()).toBe('Billing');
     expect(wrapper.find('#assignee option').at(0).text()).toBe('Erwin');
     expect(wrapper.find('#priority option').at(0).text()).toBe('Normal');
-  });
-  it('should render 1 add <button>', () => {
-    expect(wrapper.find('button').at(0).text()).toBe('Add Ticket');
   });
   it('should render 1 <form>', () => {
     expect(wrapper.find('form').length).toBe(1);

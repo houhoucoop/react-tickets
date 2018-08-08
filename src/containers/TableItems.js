@@ -4,14 +4,13 @@ import TableItem from './TableItem';
 
 class TableItems extends PureComponent {
   render() {
-    const { tableItems, deleteItem, saveItem } = this.props;
+    const { tableItems, deleteItem } = this.props;
     const allTableItems = tableItems.map(
       tableItem => (
         <TableItem
           key={tableItem.id}
           tableItem={tableItem}
           deleteItem={deleteItem}
-          saveItem={saveItem}
         />
       ),
     );
@@ -27,7 +26,6 @@ class TableItems extends PureComponent {
 TableItems.propTypes = {
   tableItems: PropTypes.arrayOf(PropTypes.object),
   deleteItem: PropTypes.func,
-  saveItem: PropTypes.func,
 };
 TableItems.defaultProps = {
   tableItems: [{

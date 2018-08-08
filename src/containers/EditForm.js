@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import shortid from 'shortid';
-import { addItem } from '../actions';
+import React, { Component } from 'react';
+import * as actions from '../actions';
 
-export class AddForm extends Component {
+class EditForm extends Component {
   //  the method doesn’t use this, so make it a static method
   static optionGenerator(optionList) {
     return optionList.map(opt => (
@@ -18,25 +17,40 @@ export class AddForm extends Component {
   constructor() {
     super();
     this.state = {
+      id: '',
       subject: '',
-      category: 'Billing',
-      assignee: 'Erwin',
-      priority: 'Normal',
+      category: '',
+      assignee: '',
+      priority: '',
+      status: '',
       categories: [],
       assignees: [],
       priorities: [],
+      statusOpt: [],
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.formReset = this.formReset.bind(this);
+    this.handleSaveItem = this.handleSaveItem.bind(this);
+    this.cancelEdit = this.cancelEdit.bind(this);
   }
 
+  // mount data before render
   componentWillMount() {
+    const { location } = this.props;
+    const {
+      id, subject, category, assignee, priority, status,
+    } = location.state;
     this.setState({
+      id,
+      subject,
+      category,
+      assignee,
+      priority,
+      status,
       categories: ['Billing', 'Dev', 'Marketing', 'Service'],
       assignees: ['Erwin', 'Jessica', 'George', 'Jose', 'Luke'],
       priorities: ['Normal', 'Low', 'Medium', 'High'],
+      statusOpt: ['Open', 'Pending', 'Processing', 'Closed'],
     });
   }
 
@@ -47,48 +61,73 @@ export class AddForm extends Component {
     });
   }
 
-  // if form submit, props addItem and reset the form
-  handleSubmit(e) {
-    const {
-      subject, category, assignee, priority,
-    } = this.state;
+  // Save: set update to true and props saveItem, then set is editing to false
+  handleSaveItem(e) {
+    const { subject } = this.state;
     if (subject === '') {
       alert('Subject can\'t be empty');
     } else {
-      const { addItemConnect } = this.props;
-      const item = {
-        id: shortid.generate(),
+      const { actionsConnect } = this.props;
+      const {
+        id, category, assignee, priority, status,
+      } = this.state;
+      const savedItem = {
+        id,
         subject,
         category,
         assignee,
         priority,
-        status: 'Open',
-        update: false,
+        status,
+        update: true,
       };
-      addItemConnect(item);
-      this.formReset();
+      actionsConnect.saveItem(savedItem);
     }
     e.preventDefault();
   }
 
-  // close modal and rest the form
-  formReset() {
+  // Cancel: reset saveItem to original props data
+  cancelEdit() {
+    const { location } = this.props;
+    const {
+      subject, category, assignee, priority, status,
+    } = location.state;
     this.setState({
-      subject: '',
-      category: 'Billing',
-      assignee: 'Erwin',
-      priority: 'Normal',
+      subject,
+      category,
+      assignee,
+      priority,
+      status,
     });
   }
 
   render() {
     const {
-      subject, category, assignee, priority, categories, assignees, priorities,
+      id,
+      subject,
+      category,
+      assignee,
+      priority,
+      status,
+      categories,
+      assignees,
+      priorities,
+      statusOpt,
     } = this.state;
     return (
       <div className="container mt-5">
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.handleSaveItem}>
           <div className="modal-body">
+            <div className="form-group">
+              <label htmlFor="item-id">
+                Id
+              </label>
+              <input
+                className="form-control"
+                id="item-id"
+                value={id}
+                readOnly
+              />
+            </div>
             <div className="form-group">
               <label htmlFor="subject">
                 Subject
@@ -111,7 +150,7 @@ export class AddForm extends Component {
                 value={category}
                 onChange={this.handleChange}
               >
-                {AddForm.optionGenerator(categories)}
+                {EditForm.optionGenerator(categories)}
               </select>
             </div>
             <div className="form-group">
@@ -124,7 +163,7 @@ export class AddForm extends Component {
                 value={assignee}
                 onChange={this.handleChange}
               >
-                {AddForm.optionGenerator(assignees)}
+                {EditForm.optionGenerator(assignees)}
               </select>
             </div>
             <div className="form-group">
@@ -137,12 +176,32 @@ export class AddForm extends Component {
                 value={priority}
                 onChange={this.handleChange}
               >
-                {AddForm.optionGenerator(priorities)}
+                {EditForm.optionGenerator(priorities)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="status">
+                Status
+              </label>
+              <select
+                className="form-control"
+                id="status"
+                value={status}
+                onChange={this.handleChange}
+              >
+                {EditForm.optionGenerator(statusOpt)}
               </select>
             </div>
           </div>
           <div className="modal-footer">
-            <input type="submit" className="btn btn-info" value="Save" />
+            <button
+              type="button"
+              className="btn btn-outline-dark btn-sm"
+              onClick={this.cancelEdit}
+            >
+              Cancel
+            </button>
+            <input type="submit" className="btn btn-info btn-sm" value="Save" />
           </div>
         </form>
       </div>
@@ -151,16 +210,17 @@ export class AddForm extends Component {
 }
 
 // props validation
-AddForm.propTypes = {
-  addItemConnect: PropTypes.func,
+EditForm.propTypes = {
+  actionsConnect: PropTypes.shape({
+    actionsConnect: PropTypes.func,
+  }),
 };
 
 const mapDispatchToProps = dispatch => ({
-  addItemConnect: bindActionCreators(addItem, dispatch),
+  actionsConnect: bindActionCreators(actions, dispatch),
 });
 
-// export default AddForm;
 export default connect(
   null,
   mapDispatchToProps,
-)(AddForm);
+)(EditForm);

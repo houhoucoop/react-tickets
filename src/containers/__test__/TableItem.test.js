@@ -1,7 +1,7 @@
 import React from 'react';
-import { mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import TableItem from '../TableItem';
-import { deleteItem, saveItem } from '../../actions';
+import { deleteItem } from '../../actions';
 
 describe('TableItem', () => {
   let tableItem;
@@ -16,26 +16,13 @@ describe('TableItem', () => {
       status: 'Open',
       update: false,
     };
-    wrapper = mount(
+    wrapper = shallow(
       <TableItem
         key="1"
         tableItem={tableItem}
         deleteItem={deleteItem}
-        saveItem={saveItem}
       />,
     );
-  });
-  it('state isEditing', () => {
-    expect(wrapper.state().isEditing).toBe(false);
-    wrapper.find('.edit-btn').simulate('click');
-    expect(wrapper.state().isEditing).toBe(true);
-  });
-  it('show edit form when click edit button', () => {
-    wrapper.setState({ isEditing: true });
-    expect(wrapper.find('select').length).toBe(4);
-    expect(wrapper.find('textarea').length).toBe(1);
-    expect(wrapper.find('.save-btn').length).toBe(1);
-    expect(wrapper.find('.cancel-btn').length).toBe(1);
   });
   it('should return props as', () => {
     expect(wrapper.instance().props.tableItem).toBe(tableItem);

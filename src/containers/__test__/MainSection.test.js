@@ -1,13 +1,23 @@
 import { shallow } from 'enzyme';
 import React from 'react';
-import { MainSection } from '../MainSection';
+import configureStore from 'redux-mock-store';
+import MainSection from '../MainSection';
+
+const mockStore = configureStore();
 
 describe('MainSection', () => {
   let wrapper;
+  let store;
   beforeEach(() => {
-    wrapper = shallow(<MainSection />);
+    store = mockStore();
+    store.dispatch = jest.fn();
+    wrapper = shallow(<MainSection store={store} />);
   });
-  it('should render 1 <table>', () => {
-    expect(wrapper.find('table').length).toBe(1);
+  it('mapStateToProps return an array', () => {
+    const expected = wrapper.props().tableItems;
+    expect(wrapper.props().tableItems).toEqual(expect.arrayContaining(expected));
+  });
+  it('mapStateToProps is definded', () => {
+    expect(wrapper.props().actionsConnect).toBeDefined();
   });
 });
