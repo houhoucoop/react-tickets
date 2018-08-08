@@ -3,17 +3,14 @@ import { shallow } from 'enzyme';
 import Header from '../Header';
 
 describe('Header', () => {
-  let wrapper,
-      tagH1;
+  let wrapper;
   beforeEach(() => {
     wrapper = shallow(<Header />);
-    tagH1 = wrapper.find('h1');
   });
-  it('should render 1 <H1>', () => {
-    expect(tagH1.exists()).toBe(true);
-    expect(tagH1.length).toBe(1);
+  it('should render 1 <header>', () => {
+    expect(wrapper.find('header').length).toBe(1);
   });
-  it('should return text as', () => {
-    expect(tagH1.text()).toBe('React-Ticket');
+  it('should render 1 <nav>', () => {
+    expect(wrapper.find('nav').length).toBe(1);
   });
 });

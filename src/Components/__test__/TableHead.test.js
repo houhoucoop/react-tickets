@@ -3,20 +3,21 @@ import { shallow } from 'enzyme';
 import TableHead from '../TableHead';
 
 describe('TableItem', () => {
-  let tableHead,
-      wrapper, 
-      tagTh;
+  let tableHead;
+  let wrapper;
   beforeEach(() => {
     tableHead = {
-      name: 'ID'
+      name: 'ID',
     };
-    wrapper = shallow(<TableHead key="1" tableHead={tableHead}/>);
-    tagTh = wrapper.find('th');
+    wrapper = shallow(<TableHead key="1" tableHead={tableHead} />);
+  });
+  it('should return props as', () => {
+    expect(wrapper.instance().props.tableHead).toBe(tableHead);
   });
   it('should render single <th>', () => {
-    expect(tagTh.length).toBe(1);
+    expect(wrapper.find('th').length).toBe(1);
   });
   it('should return text as', () => {
-    expect(tagTh.at(0).text()).toBe('ID');
+    expect(wrapper.find('th').at(0).text()).toBe('ID');
   });
 });

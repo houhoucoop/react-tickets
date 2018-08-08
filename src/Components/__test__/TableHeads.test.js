@@ -3,32 +3,47 @@ import { shallow } from 'enzyme';
 import TableHeads from '../TableHeads';
 
 describe('TableItem', () => {
-  let tableHeads,
-      wrapper,
-      tagThead,
-      tagTr;
+  let tableHeads;
+  let wrapper;
   beforeEach(() => {
     tableHeads = [{
-      name: 'ID'
+      id: '1',
+      name: 'ID',
+      class: 'w-12',
     }, {
-      name: 'Category'
+      id: '2',
+      name: 'Subject',
+      class: 'w-25',
     }, {
-      name: 'Subject'
+      id: '3',
+      name: 'Category',
+      class: 'w-12',
     }, {
-      name: 'Assignee'
+      id: '4',
+      name: 'Assignee',
+      class: 'w-10',
     }, {
-      name: 'Priority'
+      id: '5',
+      name: 'Priority',
+      class: 'w-10',
     }, {
-      name: 'Status'
+      id: '6',
+      name: 'Status',
+      class: 'w-12',
+    }, {
+      id: '7',
+      name: 'Action',
+      class: 'w-19',
     }];
     wrapper = shallow(<TableHeads tableHeads={tableHeads} />);
-    tagThead = wrapper.find('thead');
-    tagTr = wrapper.find('tr');
+  });
+  it('should return props as', () => {
+    expect(wrapper.instance().props.tableHeads).toBe(tableHeads);
   });
   it('should render 1 <thead>', () => {
-    expect(tagThead.length).toBe(1);
+    expect(wrapper.find('thead').length).toBe(1);
   });
   it('should render 1 <tr>', () => {
-    expect(tagTr.length).toBe(1);
+    expect(wrapper.find('tr').length).toBe(1);
   });
 });
