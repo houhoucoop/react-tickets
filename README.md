@@ -1,4 +1,4 @@
-# react-redux-homework
+# React Tickets
 A simple CRUD ticket system builds with react, redux and the ecosystem.
 <table><tr><td>
     <img src="https://i.imgur.com/C45FtDT.png" />
